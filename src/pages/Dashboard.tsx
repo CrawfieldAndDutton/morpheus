@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, CreditCard, FileText, Search, Clock, Plus, BarChart } from "lucide-react";
+import LogoutNavbar from "@/components/Layout/LogoutNavbar";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -84,7 +85,10 @@ const Dashboard: React.FC = () => {
   };
   
   return (
+    <div className="min-h-screen flex flex-col">
+      <LogoutNavbar/>
     <div className="min-h-screen bg-background p-4 md:p-8">
+      
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -242,6 +246,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </div>
       </div>
+    </div>
     </div>
   );
 };
