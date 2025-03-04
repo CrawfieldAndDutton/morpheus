@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, ArrowLeft, CheckCircle, AlertCircle, FileText, CreditCard, ShieldCheck } from "lucide-react";
+import { verifyApi } from "@/apis/modules/verify";
 
 // Define verification types and their details
 const verificationTypes = {
@@ -43,21 +44,22 @@ const verificationTypes = {
   vehicle: {
     title: "Vehicle RC Verification",
     description: "Verify Registration Certificate",
-    placeholder: "MH01AB1234",
+    placeholder: "MH01AB1234/21BH0000AA",
     icon: <FileText className="h-8 w-8" />,
-    pattern: "^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$",
+    pattern: "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
     credits: 15,
-    validation: (value: string) => /^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$/.test(value),
-    errorMessage: "Please enter a valid RC number (e.g., MH01AB1234)"
+    validation: (value: string) => /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/
+    .test(value),
+    errorMessage: "Please enter a valid RC number (e.g., MH01AB1234, 21BH0000AA)"
   },
   passport: {
     title: "Passport Verification",
     description: "Verify Passport Details",
     placeholder: "A1234567",
     icon: <CreditCard className="h-8 w-8" />,
-    pattern: "^[A-Z][0-9]{7}$",
+    pattern: "^[A-Z]{1}[0-9]{7}$",
     credits: 20,
-    validation: (value: string) => /^[A-Z][0-9]{7}$/.test(value),
+    validation: (value: string) => /^[A-Z]{1}[0-9]{7}$/.test(value),
     errorMessage: "Please enter a valid passport number (e.g., A1234567)"
   }
 };
@@ -102,55 +104,79 @@ const VerificationForm: React.FC = () => {
     errorMessage 
   } = verificationTypes[verificationType];
   
-  const handleVerification = (e: React.FormEvent) => {
+  // const handleVerification = (e: React.FormEvent) => {
+  //   e.preventDefault();
+    
+  //   // Validate document number
+  //   if (!documentNumber) {
+  //     toast({
+  //       title: "Input Required",
+  //       description: "Please enter the document number to verify.",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
+    
+  //   if (!validation(documentNumber)) {
+  //     toast({
+  //       title: "Invalid Format",
+  //       description: errorMessage,
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
+    
+  //   setIsLoading(true);
+  //   setVerificationResult(null);
+    
+  //   // Simulate API call for verification
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+      
+  //     // For demo purposes, we'll randomly determine success/failure
+  //     const isVerified = Math.random() > 0.3; // 70% success rate
+      
+  //     setVerificationResult({
+  //       verified: isVerified,
+  //       message: isVerified 
+  //         ? "The document has been successfully verified." 
+  //         : "Verification failed. The document details could not be verified."
+  //     });
+      
+  //     toast({
+  //       title: isVerified ? "Verification Successful" : "Verification Failed",
+  //       description: isVerified 
+  //         ? `${title} completed successfully. ${credits} credits have been deducted.` 
+  //         : `${title} could not be completed. Please check the document number and try again.`,
+  //       variant: isVerified ? "default" : "destructive",
+  //     });
+  //   }, 2000);
+  // };
+  const handleVerification = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate document number
     if (!documentNumber) {
-      toast({
-        title: "Input Required",
-        description: "Please enter the document number to verify.",
-        variant: "destructive",
-      });
+      toast({ title: "Input Required", description: "Please enter the document number to verify.", variant: "destructive" });
       return;
     }
-    
     if (!validation(documentNumber)) {
-      toast({
-        title: "Invalid Format",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast({ title: "Invalid Format", description: errorMessage, variant: "destructive" });
       return;
     }
-    
     setIsLoading(true);
-    setVerificationResult(null);
-    
-    // Simulate API call for verification
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // For demo purposes, we'll randomly determine success/failure
-      const isVerified = Math.random() > 0.3; // 70% success rate
-      
-      setVerificationResult({
-        verified: isVerified,
-        message: isVerified 
-          ? "The document has been successfully verified." 
-          : "Verification failed. The document details could not be verified."
-      });
-      
+    try {
+      const response = await verifyApi.pan({ pan: documentNumber });
       toast({
-        title: isVerified ? "Verification Successful" : "Verification Failed",
-        description: isVerified 
-          ? `${title} completed successfully. ${credits} credits have been deducted.` 
-          : `${title} could not be completed. Please check the document number and try again.`,
-        variant: isVerified ? "default" : "destructive",
+        title: response.data.result ? "PAN Verified" : "Verification Failed",
+        description: response.data.result ? "The PAN number is successfully verified." : "The provided PAN could not be verified.",
+        variant: response.data.result ? "default" : "destructive",
       });
-    }, 2000);
+    } catch (error) {
+      toast({ title: "Error", description: error?.response?.data?.message || "An error occurred during verification.", variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
-  
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
