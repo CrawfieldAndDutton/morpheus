@@ -16,7 +16,6 @@ export interface LogoutPayload {
 
 }
 
-
 export interface RegisterPayload {
   email: string;
   username: string;

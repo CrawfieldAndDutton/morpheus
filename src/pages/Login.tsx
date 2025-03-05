@@ -80,12 +80,12 @@ const Login: React.FC = () => {
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
-                    type="email"
+                    type="text"
                     placeholder="you@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
-                    autoComplete="email"
+                    // autoComplete="email"
                     autoFocus
                     />
                 </div>
