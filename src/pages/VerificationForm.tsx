@@ -22,6 +22,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { verifyApi } from "@/apis/modules/verify";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 // Define verification types and their details
 const verificationTypes = {
@@ -88,6 +90,7 @@ const VerificationForm: React.FC = () => {
   const { type } = useParams<{ type: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+
 
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -195,10 +198,10 @@ const VerificationForm: React.FC = () => {
     try {
       const response = await verifyApi.pan({ pan: documentNumber });
       toast({
-        title: response.data.result ? "PAN Verified" : "Verification Failed",
+        title: response.data.result ? "Verified" : "Verification Failed",
         description: response.data.result
-          ? "The PAN number is successfully verified."
-          : "The provided PAN could not be verified.",
+          ? "The Document is successfully verified."
+          : "The provided Document could not be verified.",
         variant: response.data.result ? "default" : "destructive",
       });
     } catch (error) {
@@ -287,22 +290,61 @@ const VerificationForm: React.FC = () => {
             </form>
 
             <Card className="mt-4">
-              <div className="container mx-auto p-4">
-                <h1 className="text-xl font-bold mb-4">Document Details</h1>
-                <div className="flex gap-4 w-full">
-                  <div className="w-1/2 shadow-md rounded-lg p-4">
-                    <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
-                    <pre className="text-sm bg-gray-100 p-2 rounded-md overflow-x-auto">
-                      {/* {apiResponse ? JSON.stringify(apiResponse, null, 2) : "No data available"} */}
-                    </pre>
-                  </div>
-                  <div className="w-1/2 shadow-md rounded-lg p-4">
-                    <h2 className="text-lg font-semibold mb-2">Details Response</h2>
-                    {/* Add specific details from the response here if needed */}
-                  </div>
-                </div>
-              </div>
-            </Card>
+  <div className="container mx-auto p-4">
+    <h1 className="text-xl font-bold mb-4">Document Details</h1>
+    <div className="flex gap-4 w-full">
+      {/* Full API Response with JSON Syntax Highlighting */}
+      <div className="w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
+        <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
+        <SyntaxHighlighter
+          language="json"
+          style={atomDark}
+          className="rounded-md p-2"
+        >
+          {JSON.stringify(
+            {
+              status: "success",
+              message: "PAN verification completed",
+              details: {
+                full_name: "Soumyajit Bhadra",
+                pan: "DQQPB0223C",
+                pan_type: "Personal",
+                pan_status: "Active",
+              },
+              verified: true,
+            },
+            null,
+            2
+          )}
+        </SyntaxHighlighter>
+      </div>
+
+      {/* Human Readable Details */}
+      <div className="w-1/2 shadow-md rounded-lg p-4 bg-white">
+        <h2 className="text-lg font-semibold mb-2">Details Response</h2>
+        <div className="text-sm space-y-2">
+        <p>
+            <span className="font-medium text-blue-600">Name: </span>
+            <span className="text-green-600"> Soumyajit Bhadra</span>
+          </p>
+          <p>
+            <span className="font-medium text-blue-600">PAN: </span> 
+            <span className="text-green-600"> DQQPB0223C</span>
+          </p>
+          <p>
+            <span className="font-medium text-blue-600">Type: </span> 
+            <span className="text-green-600"> Personal</span>
+          </p>
+          <p>
+            <span className="font-medium text-blue-600">Status: </span> 
+            <span className="text-green-600"> Active</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Card>
+
 
             {verificationResult && (
               <div

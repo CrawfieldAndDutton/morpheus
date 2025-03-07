@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Building, Mail, KeyRound, Loader2 } from "lucide-react";
+import { FileText, Mail, KeyRound, Loader2 } from "lucide-react";
 import { authApi } from "@/apis/modules/auth";
 
 const Register: React.FC = () => {
@@ -263,7 +263,7 @@ const Register: React.FC = () => {
                 <div className="space-y-2">
                   <Label htmlFor="first_name">First Name</Label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="first_name"
                       type="text"
@@ -281,7 +281,7 @@ const Register: React.FC = () => {
                 <div className="space-y-2">
                   <Label htmlFor="last_name">Last Name</Label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="last_name"
                       type="text"

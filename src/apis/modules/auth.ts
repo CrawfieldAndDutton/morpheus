@@ -9,7 +9,7 @@ import {
 
 export const authApi = {
   login: (data: LoginPayload) =>
-    httpClient.post<LoginResponse>("/auth/login", data),
+    httpClient.post<LoginResponse>("/auth/login", data,{}),
 
   register: (data: RegisterPayload) =>
     httpClient.post<RegisterResponse>("/auth/register", data),
