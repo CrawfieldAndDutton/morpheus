@@ -85,7 +85,7 @@ const Login: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
-                    autoComplete="email"
+                    autoComplete="text"
                     autoFocus
                     />
                 </div>

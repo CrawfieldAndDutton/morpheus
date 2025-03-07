@@ -324,20 +324,20 @@ const VerificationForm: React.FC = () => {
         <h2 className="text-lg font-semibold mb-2">Details Response</h2>
         <div className="text-sm space-y-2">
         <p>
-            <span className="font-medium text-blue-600">Name: </span>
-            <span className="text-green-600"> Soumyajit Bhadra</span>
+            <span className="font-medium">Name: </span>
+            <span className="font-medium"> Soumyajit Bhadra</span>
           </p>
           <p>
-            <span className="font-medium text-blue-600">PAN: </span> 
-            <span className="text-green-600"> DQQPB0223C</span>
+            <span className="font-medium">PAN: </span> 
+            <span className="font-medium"> DQQPB0223C</span>
           </p>
           <p>
-            <span className="font-medium text-blue-600">Type: </span> 
-            <span className="text-green-600"> Personal</span>
+            <span className="font-medium">Type: </span> 
+            <span className="font-medium"> Personal</span>
           </p>
           <p>
-            <span className="font-medium text-blue-600">Status: </span> 
-            <span className="text-green-600"> Active</span>
+            <span className="font-medium">Status: </span> 
+            <span className="font-medium"> Active</span>
           </p>
         </div>
       </div>

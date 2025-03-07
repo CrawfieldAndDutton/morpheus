@@ -6,7 +6,7 @@ export const verifyApi = {
     httpClient.post<PanResponse>("/v1/pan/verify", data),
 
   vehicle: (data: VehiclePayload) =>
-    httpClient.post<VehicleResponse>("/verify/vehicle", data),
+    httpClient.post<VehicleResponse>("/v1/rc/verify", data),
 
 
 };
