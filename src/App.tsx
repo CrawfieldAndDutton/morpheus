@@ -16,8 +16,11 @@ import VerificationHistory from "./pages/VerificationHistory";
 import CreditPurchase from "./pages/CreditPurchase";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "./components/ui/toaster";
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Change to true to test PrivateRoute
+
   return (
     <HashRouter>
       <Toaster></Toaster>
@@ -28,11 +31,11 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<PrivateRoute isAuthenticated={isAuthenticated} element={<Dashboard />} />} />
         <Route path="/application-progress" element={<ApplicationProgress />} />
-        <Route path="/verification-form/:type" element={<VerificationForm />} />
-        <Route path="/verification-history" element={<VerificationHistory />} />
-        <Route path="/credit-purchase" element={<CreditPurchase />} />
+        <Route path="/verification-form/:type" element={<PrivateRoute isAuthenticated={isAuthenticated} element={<VerificationForm />} />} />
+        <Route path="/verification-history" element={<PrivateRoute isAuthenticated={isAuthenticated} element={<VerificationHistory />} />} />
+        <Route path="/credit-purchase" element={<PrivateRoute isAuthenticated={isAuthenticated} element={<CreditPurchase />} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </HashRouter>

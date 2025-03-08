@@ -15,6 +15,7 @@ const httpClient = axios.create({
   baseURL: config.baseUrl,
   timeout: 10000,
   headers: {
+    // "Content-Type": "application/x-www-form-urlencoded",
     "Content-Type": "application/json",
   },
 });
