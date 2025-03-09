@@ -63,10 +63,10 @@ const verificationTypes = {
     placeholder: "MH01AB1234/21BH0000AA",
     icon: <FileText className="h-8 w-8" />,
     pattern:
-      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
+      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
     credits: 15,
     validation: (value: string) =>
-      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/.test(
+      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/.test(
         value
       ),
     errorMessage:

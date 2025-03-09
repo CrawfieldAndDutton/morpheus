@@ -29,6 +29,8 @@ const userSlice = createSlice({
       state.token = null;
       state.userInfo = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      
     },
   },
 });

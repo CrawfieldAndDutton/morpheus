@@ -5,18 +5,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { authApi } from "@/apis/modules/auth";
+import { useDispatch } from "react-redux";
+import { logout } from "@/store/userSlice";
 
 const LogoutNavbar: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useDispatch();
 
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
-    
 
     try {
-      await authApi.logout(); 
-      localStorage.removeItem("token");
+      await authApi.logout({refresh_token: localStorage.getItem("refreshToken")});
+      dispatch(logout());
       toast({
         title: "Logged Out",
         description: "You have successfully logged out.",
@@ -30,7 +32,6 @@ const LogoutNavbar: React.FC = () => {
       });
     }
   };
-  
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 py-4 bg-background/80 backdrop-blur-md border-b shadow-sm">
