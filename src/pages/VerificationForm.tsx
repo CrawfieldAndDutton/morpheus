@@ -97,7 +97,9 @@ const VerificationForm: React.FC = () => {
   const [verificationResult, setVerificationResult] = useState<null | {
     verified: boolean;
     message: string;
+    data?: any;
   }>(null);
+ 
 
   // Check if verification type is valid
   useEffect(() => {
@@ -288,81 +290,57 @@ const VerificationForm: React.FC = () => {
                 )}
               </Button>
             </form>
-
-            <Card className="mt-4">
-  <div className="container mx-auto p-4">
-    <h1 className="text-xl font-bold mb-4">Document Details</h1>
-
-    {/* Responsive Layout: Stack on Mobile, Row on Larger Screens */}
-    <div className="flex flex-col md:flex-row gap-4 w-full">
+            
       
-      {/* Human Readable Details  */}
-      <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
-        <h2 className="text-lg font-semibold mb-2">Details Response</h2>
-        
-        {/* Table Format */}
-        <table className="w-full border border-gray-300">
-          <tbody>
-            <tr className="border-b">
-              <td className="p-2 font-medium bg-gray-100">Name</td>
-              <td className="p-2">Soumyajit Bhadra</td>
-            </tr>
-            <tr className="border-b">
-              <td className="p-2 font-medium bg-gray-100">PAN</td>
-              <td className="p-2">DQQPB0223C</td>
-            </tr>
-            <tr className="border-b">
-              <td className="p-2 font-medium bg-gray-100">Type</td>
-              <td className="p-2">Personal</td>
-            </tr>
-            <tr>
-              <td className="p-2 font-medium bg-gray-100">Status</td>
-              <td className="p-2">Active</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            
+              <Card className="mt-4">
+                <div className="container mx-auto p-4">
+                  <h1 className="text-xl font-bold mb-4">Document Details</h1>
 
-      {/* Full API Response */}
-      <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
-        <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
-        <SyntaxHighlighter
-          language="json"
-          style={atomDark}
-          className="rounded-md p-2"
-        >
-          {JSON.stringify(
-            {
-              status: "success",
-              message: "PAN verification completed",
-              details: {
-                full_name: "Soumyajit Bhadra",
-                pan: "DQQPB0223C",
-                pan_type: "Personal",
-                pan_status: "Active",
-              },
-              verified: true,
-            },
-            null,
-            2
-          )}
-        </SyntaxHighlighter>
-      </div>
+                  <div className="flex flex-col md:flex-row gap-4 w-full">
+                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
+                      <h2 className="text-lg font-semibold mb-2">Details Response</h2>
+                      <table className="w-full border border-gray-300">
+                        <tbody>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">Name</td>
+                            <td className="p-2">{verificationResult.data?.full_name || "N/A"}</td>
+                          </tr>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">PAN</td>
+                            <td className="p-2">{verificationResult.data?.pan || "N/A"}</td>
+                          </tr>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">Type</td>
+                            <td className="p-2">{verificationResult.data?.pan_type || "N/A"}</td>
+                          </tr>
+                          <tr>
+                            <td className="p-2 font-medium bg-gray-100">Status</td>
+                            <td className="p-2">{verificationResult.data?.pan_status || "N/A"}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
-    </div>
-  </div>
-</Card>
+                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
+                      <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
+                      <SyntaxHighlighter
+                        language="json"
+                        style={atomDark}
+                        className="rounded-md p-2"
+                      >
+                        {JSON.stringify(verificationResult.data, null, 2)}
+                      </SyntaxHighlighter>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            
 
 
 
 
-  
-
-
-
-
-
-            {verificationResult && (
+           {verificationResult && (
               <div
                 className={`mt-6 p-4 rounded-lg ${
                   verificationResult.verified
