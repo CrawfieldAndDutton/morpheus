@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Mail, Loader2, KeyRound } from "lucide-react";
 import { authApi } from "@/apis/modules/auth";
+import { useDispatch } from "react-redux";
+import { setToken } from "@/store/userSlice";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -21,6 +23,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +41,7 @@ const Login: React.FC = () => {
 
     try {
       const response = await authApi.login({ username: email, password });
-      localStorage.setItem("token", response.data.access_token);
+      dispatch(setToken(response.data.access_token));
       toast({
         title: "Login Successful",
         description: "Welcome to KYCFabric!",

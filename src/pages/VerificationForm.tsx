@@ -292,9 +292,39 @@ const VerificationForm: React.FC = () => {
             <Card className="mt-4">
   <div className="container mx-auto p-4">
     <h1 className="text-xl font-bold mb-4">Document Details</h1>
-    <div className="flex gap-4 w-full">
-      {/* Full API Response with JSON Syntax Highlighting */}
-      <div className="w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
+
+    {/* Responsive Layout: Stack on Mobile, Row on Larger Screens */}
+    <div className="flex flex-col md:flex-row gap-4 w-full">
+      
+      {/* Human Readable Details  */}
+      <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
+        <h2 className="text-lg font-semibold mb-2">Details Response</h2>
+        
+        {/* Table Format */}
+        <table className="w-full border border-gray-300">
+          <tbody>
+            <tr className="border-b">
+              <td className="p-2 font-medium bg-gray-100">Name</td>
+              <td className="p-2">Soumyajit Bhadra</td>
+            </tr>
+            <tr className="border-b">
+              <td className="p-2 font-medium bg-gray-100">PAN</td>
+              <td className="p-2">DQQPB0223C</td>
+            </tr>
+            <tr className="border-b">
+              <td className="p-2 font-medium bg-gray-100">Type</td>
+              <td className="p-2">Personal</td>
+            </tr>
+            <tr>
+              <td className="p-2 font-medium bg-gray-100">Status</td>
+              <td className="p-2">Active</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Full API Response */}
+      <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
         <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
         <SyntaxHighlighter
           language="json"
@@ -319,31 +349,17 @@ const VerificationForm: React.FC = () => {
         </SyntaxHighlighter>
       </div>
 
-      {/* Human Readable Details */}
-      <div className="w-1/2 shadow-md rounded-lg p-4 bg-white">
-        <h2 className="text-lg font-semibold mb-2">Details Response</h2>
-        <div className="text-sm space-y-2">
-        <p>
-            <span className="font-medium">Name: </span>
-            <span className="font-medium"> Soumyajit Bhadra</span>
-          </p>
-          <p>
-            <span className="font-medium">PAN: </span> 
-            <span className="font-medium"> DQQPB0223C</span>
-          </p>
-          <p>
-            <span className="font-medium">Type: </span> 
-            <span className="font-medium"> Personal</span>
-          </p>
-          <p>
-            <span className="font-medium">Status: </span> 
-            <span className="font-medium"> Active</span>
-          </p>
-        </div>
-      </div>
     </div>
   </div>
 </Card>
+
+
+
+
+  
+
+
+
 
 
             {verificationResult && (

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import {useSelector} from "react-redux";
 
 // Pages
 import Index from "./pages/Index";
@@ -20,6 +21,16 @@ import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Change to true to test PrivateRoute
+  const token  = useSelector((state: any) => state.user.token);
+  useEffect(() => {
+    
+    if(token){
+      setIsAuthenticated(true);
+     } else
+      {
+        setIsAuthenticated(false);
+      }
+}, [token]);
 
   return (
     <HashRouter>
@@ -32,8 +43,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<PrivateRoute isAuthenticated={isAuthenticated} element={Dashboard} />} />
-        <Route path="/application-progress" element={ApplicationProgress} />
+        <Route path="/application-progress" element={<ApplicationProgress/>} />
         <Route path="/verification-form/:type" element={<PrivateRoute isAuthenticated={isAuthenticated} element={VerificationForm} />} />
+        {/* <Route path="/verification-form/:type" element={<VerificationForm />} /> */}
         <Route path="/verification-history" element={<PrivateRoute isAuthenticated={isAuthenticated} element={VerificationHistory} />} />
         <Route path="/credit-purchase" element={<PrivateRoute isAuthenticated={isAuthenticated} element={CreditPurchase} />} />
         <Route path="*" element={<NotFound />} />
