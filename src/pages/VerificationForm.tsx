@@ -94,11 +94,7 @@ const VerificationForm: React.FC = () => {
 
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<null | {
-    verified: boolean;
-    message: string;
-    data?: any;
-  }>(null);
+  const [verificationResult, setVerificationResult] = useState(null);
  
 
   // Check if verification type is valid
@@ -112,6 +108,11 @@ const VerificationForm: React.FC = () => {
       navigate("/dashboard");
     }
   }, [type, navigate, toast]);
+
+  useEffect(() => {
+    console.log(verificationResult, "Verification Result");
+  }, [verificationResult]);
+
 
   // If type is not defined or invalid, return null
   if (!type || !Object.keys(verificationTypes).includes(type)) {
@@ -199,6 +200,8 @@ const VerificationForm: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await verifyApi.pan({ pan: documentNumber });
+      console.log(response);
+      setVerificationResult(response.data.result);
       toast({
         title: response.data.result ? "Verified" : "Verification Failed",
         description: response.data.result
@@ -219,6 +222,7 @@ const VerificationForm: React.FC = () => {
     }
   };
 
+  
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -304,19 +308,19 @@ const VerificationForm: React.FC = () => {
                         <tbody>
                           <tr className="border-b">
                             <td className="p-2 font-medium bg-gray-100">Name</td>
-                            <td className="p-2">{verificationResult.data?.full_name || "N/A"}</td>
+                            <td className="p-2">{verificationResult?.result?.full_name || "N/A"}</td>
                           </tr>
                           <tr className="border-b">
                             <td className="p-2 font-medium bg-gray-100">PAN</td>
-                            <td className="p-2">{verificationResult.data?.pan || "N/A"}</td>
+                            <td className="p-2">{verificationResult?.result?.pan || "N/A"}</td>
                           </tr>
                           <tr className="border-b">
                             <td className="p-2 font-medium bg-gray-100">Type</td>
-                            <td className="p-2">{verificationResult.data?.pan_type || "N/A"}</td>
+                            <td className="p-2">{verificationResult?.result?.pan_type || "N/A"}</td>
                           </tr>
                           <tr>
                             <td className="p-2 font-medium bg-gray-100">Status</td>
-                            <td className="p-2">{verificationResult.data?.pan_status || "N/A"}</td>
+                            <td className="p-2">{verificationResult?.result?.pan_status || "N/A"}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -329,7 +333,7 @@ const VerificationForm: React.FC = () => {
                         style={atomDark}
                         className="rounded-md p-2"
                       >
-                        {JSON.stringify(verificationResult.data, null, 2)}
+                        {JSON.stringify(verificationResult, null, 2)}
                       </SyntaxHighlighter>
                     </div>
                   </div>
@@ -343,13 +347,13 @@ const VerificationForm: React.FC = () => {
            {verificationResult && (
               <div
                 className={`mt-6 p-4 rounded-lg ${
-                  verificationResult.verified
+                  verificationResult.status === 'success'
                     ? "bg-green-50 border border-green-200"
                     : "bg-red-50 border border-red-200"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  {verificationResult.verified ? (
+                  {verificationResult.status === 'success' ? (
                     <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
                   ) : (
                     <AlertCircle className="h-6 w-6 text-red-600 mt-0.5" />
@@ -357,18 +361,18 @@ const VerificationForm: React.FC = () => {
                   <div>
                     <h3
                       className={`font-medium ${
-                        verificationResult.verified
+                        verificationResult.status === 'success'
                           ? "text-green-800"
                           : "text-red-800"
                       }`}
                     >
-                      {verificationResult.verified
+                      {verificationResult.status === 'success'
                         ? "Verification Successful"
                         : "Verification Failed"}
                     </h3>
                     <p
                       className={`text-sm ${
-                        verificationResult.verified
+                        verificationResult.status === 'success'
                           ? "text-green-700"
                           : "text-red-700"
                       }`}
