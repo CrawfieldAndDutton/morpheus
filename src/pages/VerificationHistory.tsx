@@ -188,14 +188,14 @@ const VerificationHistory: React.FC = () => {
                 <FileDown className="h-4 w-4" />
                 CSV
               </Button>
-              <Button 
+              {/* <Button 
                 variant="outline"
                 onClick={() => handleDownloadStatement('pdf')}
                 className="flex items-center gap-2"
               >
                 <Download className="h-4 w-4" />
                 PDF
-              </Button>
+              </Button> */}
               <Button 
                 variant="outline"
                 onClick={() => window.print()}

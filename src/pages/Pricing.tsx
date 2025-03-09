@@ -112,7 +112,7 @@ const pricingPlans = [
       "All Verification Types",
       "API Access",
       "24/7 Email Support",
-      "CSV/PDF Verification Reports",
+      "CSV Verification Reports",
       "30-Day History"
     ]
   },
@@ -126,7 +126,7 @@ const pricingPlans = [
       "All Verification Types",
       "API Access",
       "Priority Support",
-      "CSV/PDF Verification Reports",
+      "CSV Verification Reports",
       "90-Day History",
       "Batch Verification Upload"
     ]
@@ -141,7 +141,7 @@ const pricingPlans = [
       "All Verification Types",
       "Advanced API Access",
       "Dedicated Account Manager",
-      "CSV/PDF Verification Reports",
+      "CSV Verification Reports",
       "1-Year History",
       "Batch Verification Upload",
       "Custom Integration Support"
