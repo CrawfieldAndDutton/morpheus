@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Mail, Loader2, KeyRound } from "lucide-react";
 import { authApi } from "@/apis/modules/auth";
-import { useDispatch } from "react-redux";
-import { setToken } from "@/store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setExpiresAt, setRefreshToken, setToken } from "@/store/userSlice";
+import { RootState } from "@/types/store.types";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -24,6 +25,12 @@ const Login: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const token = useSelector((state: RootState) => state.user.token);
+
+  useEffect(() => {
+    console.log(token, "Token updated");
+  }, [token]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,17 +49,21 @@ const Login: React.FC = () => {
     try {
       const response = await authApi.login({ username: email, password });
       dispatch(setToken(response.data.access_token));
+      dispatch(setRefreshToken(response.data.refresh_token));
+      dispatch(setExpiresAt(response.data.expires_at));
       toast({
         title: "Login Successful",
         description: "Welcome to KYCFabric!",
       });
       navigate("/dashboard");
     } catch (error) {
-      toast({
-        title: "Login Failed",
-        description: error.details[0].msg,
-        variant: "destructive",
-      });
+      if (error?.details) {
+        toast({
+          title: "Login Failed",
+          description: error?.details[0].msg,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +101,7 @@ const Login: React.FC = () => {
                     className="pl-10"
                     autoComplete="text"
                     autoFocus
-                    />
+                  />
                 </div>
               </div>
               <div className="space-y-2">

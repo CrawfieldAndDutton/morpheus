@@ -24,8 +24,12 @@ const httpClient = axios.create({
 httpClient.interceptors.request.use(
   (config) => {
     const customConfig = config as CustomAxiosRequestConfig;
-    if (customConfig.useAuth) {
-      const token = localStorage.getItem("token");
+    if (customConfig?.headers?.useAuth) {
+      const token =
+        customConfig?.headers?.token ||
+        (customConfig?.headers?.useRefreshToken
+          ? localStorage.getItem("refreshToken")
+          : localStorage.getItem("token"));
       if (token) {
         // Use AxiosHeaders type for headers
         (customConfig.headers as AxiosHeaders).set(
@@ -35,6 +39,10 @@ httpClient.interceptors.request.use(
       } else {
         console.warn("No token found for authenticated request.");
       }
+      if (customConfig?.headers) {
+        customConfig.headers["Content-Type"] =
+          customConfig.headers["Content-Type"] || "application/json";
+      }
     }
     return customConfig;
   },
@@ -43,7 +51,7 @@ httpClient.interceptors.request.use(
 
 // Response Interceptor for error handling
 httpClient.interceptors.response.use(
-  (response: AxiosResponse) => response.data,
+  (response: AxiosResponse) => response,
   (error) => {
     console.error("API Error:", error);
     return Promise.reject(error);
