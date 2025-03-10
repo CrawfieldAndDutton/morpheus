@@ -180,7 +180,8 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Credit Balance Card */}
-          <Card>
+          <div className="flex max-sm:flex-col">
+          <Card className="w-[70%] max-sm:w-[100%]">
             <div className="flex justify-between max-sm:block">
               <CardHeader className="pb-3 max-sm:pb-0">
                 <CardTitle className="text-xl">Credit Balance</CardTitle>
@@ -190,28 +191,13 @@ const Dashboard: React.FC = () => {
                 </CardDescription>
               </CardHeader>
 
-              <CardHeader className="relative mb-3">
-                <div className=" justify-start p-0 text-primary hover:text-primary hover:bg-transparent">
-                  Daily Creds Used :
-                  <span className="text-sm text-muted-foreground">
-                    {"  "}
-                    400
-                  </span>
-                </div>
-
-                <div className="absolute justify-start top-10 p-0 text-primary hover:text-primary hover:bg-transparent">
-                  Total Creds Used :
-                  <span className="text-sm text-muted-foreground">
-                    {"  "}
-                    5000
-                  </span>
-                </div>
-              </CardHeader>
+              
+              
             </div>
 
             <CardContent>
               <div className="flex items-center">
-                <DollarSign className="h-10 w-10 text-kycfabric-gold mr-4" />
+                
                 <div>
                   <div className="text-3xl font-bold">{creditBalance}</div>
                   <div className="text-sm text-muted-foreground">
@@ -230,6 +216,29 @@ const Dashboard: React.FC = () => {
               </Button>
             </CardFooter>
           </Card>
+          
+          <div className="w-[30%] max-sm:w-[100%] max-sm:flex">
+                <div className="bg-yellow-50 rounded-t-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]"  style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
+                  <div className=" hover:bg-transparent max-sm:text-sm">Daily Credit Used </div>
+                  <span className="text-xl text-muted-foreground">
+                    {"  "}
+                    400
+                  </span>
+                </div>
+
+                <div className="bg-yellow-50 rounded-b-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]" style={{border: '1px solid hsl(45, 100%, 50%)'  }}>
+                <div className=" hover:bg-transparent max-sm:text-sm">Monthly Credit Used </div>
+                  <span className="text-xl text-muted-foreground">
+                    {"  "}
+                    5000
+                  </span>
+                </div>
+                </div>
+
+
+          </div>
+
+          
 
           {/*Analytics of api usage*/}
           <div className="display flex gap-4 max-sm:flex-col">
@@ -243,11 +252,11 @@ const Dashboard: React.FC = () => {
           {/*daily credit usage and api usage section */}
           <div>
             <h2 className="text-2xl font-bold mb-4">Daily API Calls</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2">
               {dailyVerification.map((method) => (
                 <Card
                   key={method.id}
-                  className="hover:border-primary transition-all "
+                  className="hover:border-primary transition-all min-h-[300px]"
                 >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">
@@ -265,39 +274,39 @@ const Dashboard: React.FC = () => {
                       {method.description}{" "}
                     </p>
                   </CardContent>
-                  <CardContent>
-                    <span className="w-full justify-start p-0 text-primary hover:text-primary hover:bg-transparent">
-                      Daily Calls :
-                      <span className="text-sm text-muted-foreground">
+                  <div className="bg-yellow-50 grid grid-cols-2 h-[157px] mt-5 " >
+                    <div className="w-full flex flex-col justify-center items-center p-0 hover:bg-transparent " style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
+                    <div className="text-[12px]">Daily Calls </div>
+                      <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.dailyCalls}
                       </span>
-                    </span>
+                    </div>
 
-                    <div className="w-full justify-start p-0 text-primary hover:text-primary hover:bg-transparent">
-                      Total Calls :
-                      <span className="text-sm text-muted-foreground">
+                    <div className="w-full flex flex-col justify-center items-center  p-0  hover:bg-transparent" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
+                      <div className="text-[12px]">Total Calls </div>
+                      <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.totalCalls}
                       </span>
                     </div>
 
-                    <div className="w-full justify-start p-0 text-primary hover:text-primary hover:bg-transparent">
-                      Daily Creds Used :
-                      <span className="text-sm text-muted-foreground">
+                    <div className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-bl-lg" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
+                      <div className="text-[12px]  text-nowrap">Daily Credit Used </div>
+                      <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.dailyCalls * method.credits}
                       </span>
                     </div>
 
-                    <div className="w-full justify-start p-0 text-primary hover:text-primary hover:bg-transparent">
-                      Total Creds Used :
-                      <span className="text-sm text-muted-foreground">
+                    <div className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-br-lg" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
+                     <div className="text-[12px] text-nowrap">Total Credit Used </div>
+                      <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.totalCalls * method.credits}
                       </span>
                     </div>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>

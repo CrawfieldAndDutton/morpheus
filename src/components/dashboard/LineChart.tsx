@@ -18,28 +18,38 @@ import {
 // Define TypeScript interfaces for data and chart config
 interface ChartData {
   month: string;
-  desktop: number;
+  calls: number;
 }
 
-const chartData: ChartData[] = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
 
-const chartConfig: ChartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(221.2 83.2% 53.3%)",
-  },
-};
 
 export function LineChartUi(): JSX.Element {
+
+  const chartData: ChartData[] = [
+    { month: "January", calls: 186 },
+    { month: "February", calls: 305 },
+    { month: "March", calls: 237 },
+    { month: "April", calls: 73 },
+    { month: "May", calls: 209 },
+    { month: "June", calls: 214 },
+    { month: "July", calls: 213 },
+    { month: "August", calls: 213 },
+    { month: "September", calls: 213 },
+    { month: "October", calls: 210 },
+    { month: "November", calls: 212 },
+    { month: "December", calls: 223 },
+  ];
+  
+  const chartConfig: ChartConfig = {
+    calls: {
+      label: "Api Calls",
+      color: "hsl(221.2 83.2% 53.3%)",
+    },
+  };
+
+
   return (
-    <Card className="w-[60%] max-w-full p-4 max-sm:w-[100%]">
+    <Card className="w-[55%] max-w-full p-4 max-sm:w-[100%]">
       <CardHeader>
         <CardTitle>Monthly API Usage</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
@@ -67,7 +77,7 @@ export function LineChartUi(): JSX.Element {
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="calls"
               type="linear"
               stroke="hsl(54, 90%, 61%)"
               strokeWidth={2}

@@ -14,44 +14,80 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useEffect, useState } from "react";
+import { dashboardApi } from "@/apis/modules/dashboard";
 
-const chartData = [
-  { browser: "PAN", visitors: 275, fill: "hsl(44, 90%, 53.3%)" },
-  { browser: "Aadhar", visitors: 200, fill: "hsl(44, 90%, 68%)" },
-  { browser: "Voter", visitors: 187, fill: "hsl(44, 90%, 60%)" },
-  { browser: "Vehicle RC", visitors: 173, fill: "hsl(44, 90%, 78%)" },
-  { browser: "Passport", visitors: 90, fill: "hsl(44, 90%, 87%)" },
-];
 
-const chartConfig: ChartConfig = {
-  visitors: {
-    label: "pan",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(221.2, 83.2%, 53.3%)",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(212, 95%, 68%)",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "hsl(216, 92%, 60%)",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(210, 98%, 78%)",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(212, 97%, 87%)",
-  },
-};
 
 export function PieChartUi() {
+
+  const [dashboardData, setDashboardData] = useState<any>([]);
+
+  //used to get the data whenever the user comes to dashboard
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      try {
+        const response = await dashboardApi.getApiUsage();
+        setDashboardData(response);
+      } catch (err) {
+        console.log("error in fetching dashboard")
+      } 
+    };
+    fetchData();
+    
+  }, []);
+  
+  //sorting the data to map it with the colors array
+  const sortedChartData = [...dashboardData].sort((a, b) => b.calls - a.calls);
+  
+  //colors deep to light
+  const fillColors = [
+    "hsl(44, 90%, 50.3%)",
+    "hsl(44, 90%, 60%)" ,
+    "hsl(44, 90%, 68%)" ,
+    "hsl(44, 90%, 78%)" ,
+    "hsl(44, 90%, 87%)",
+  ]
+
+  //mapping the colors with the coming values
+  const schartData = sortedChartData.map((item, index :number) => ({
+    ...item,
+    fill: fillColors[index], // Default to last color if out of range
+  }));
+  
+  
+  //not using anything
+  const chartConfig: ChartConfig = {
+    visitors: {
+      label: "pan",
+    },
+    PAN: {
+      label: "pan",
+      color: "",
+    },
+    Aadhar: {
+      label: "aadhar",
+      color: "hsl(212, 95%, 68%)",
+    },
+    Voter: {
+      label: "voter",
+      color: "hsl(216, 92%, 60%)",
+    },
+    VehicleRC: {
+      label: "Vehicle RC",
+      color: "hsl(210, 98%, 78%)",
+    },
+    Passport: {
+      label: "Passport",
+      color: "hsl(212, 97%, 87%)",
+    },
+  };
+
+
+
   return (
-    <Card className="flex flex-col w-[40%] max-sm:w-[100%] p-4">
+    <Card className="flex flex-col w-[45%] max-sm:w-[100%] p-4">
       <CardHeader className="items-center pb-0">
         <CardTitle>API Usage</CardTitle>
         <CardDescription>All API usage uptil now</CardDescription>
@@ -59,15 +95,16 @@ export function PieChartUi() {
       <CardContent className="flex-1 pb-0  flex justify-center items-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] px-0 flex justify-center w-[250px] h-[250px] items-center "
+          className="mx-auto aspect-square max-h-[250px] px-0 m-2 flex justify-center w-[330px] h-[250px] items-center "
         >
-          <PieChart >
+          <PieChart className="p-0">
             <ChartTooltip
               content={<ChartTooltipContent  hideLabel />}
             />
             <Pie
-              data={chartData}
-              dataKey="visitors"
+              
+              data={schartData}
+              dataKey="calls"
               labelLine={false}
               label={({ payload, ...props }) => {
                 return (
@@ -80,11 +117,11 @@ export function PieChartUi() {
                     dominantBaseline={props.dominantBaseline}
                     fill="black"
                   >
-                    {payload.visitors}
+                    {payload.calls}
                   </text>
                 );
               }}
-              nameKey="browser"
+              nameKey="type"
             />
           </PieChart>
         </ChartContainer>
