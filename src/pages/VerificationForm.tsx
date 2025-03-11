@@ -91,11 +91,9 @@ const VerificationForm: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
- 
 
   // Check if verification type is valid
   useEffect(() => {
@@ -112,7 +110,6 @@ const VerificationForm: React.FC = () => {
   useEffect(() => {
     console.log(verificationResult, "Verification Result");
   }, [verificationResult]);
-
 
   // If type is not defined or invalid, return null
   if (!type || !Object.keys(verificationTypes).includes(type)) {
@@ -199,25 +196,24 @@ const VerificationForm: React.FC = () => {
     }
     setIsLoading(true);
 
-   try {
-    let response;
-    switch (verificationType) {
-      case "pan":
-        response = await verifyApi.pan({ pan: documentNumber });
-        break;
-     
-      
-case "vehicle":
-        response = await verifyApi.vehicle({ reg_no: documentNumber });
-        break;
+    try {
+      let response;
+      switch (verificationType) {
+        case "pan":
+          response = await verifyApi.pan({ pan: documentNumber });
+          break;
+
+        case "vehicle":
+          response = await verifyApi.vehicle({ reg_no: documentNumber });
+          break;
 
         case "voter":
           response = await verifyApi.voter({ epic_no: documentNumber });
           break;
-      
-      default:
-        throw new Error("Unsupported verification type");
-    }
+
+        default:
+          throw new Error("Unsupported verification type");
+      }
 
       setVerificationResult(response.data.result);
       toast({
@@ -240,7 +236,6 @@ case "vehicle":
     }
   };
 
-  
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -312,62 +307,184 @@ case "vehicle":
                 )}
               </Button>
             </form>
-            
-      
-            
-              <Card className="mt-4">
-                <div className="container mx-auto p-4">
-                  <h1 className="text-xl font-bold mb-4">Document Details</h1>
 
-                  <div className="flex flex-col md:flex-row gap-4 w-full">
-                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
-                      <h2 className="text-lg font-semibold mb-2">Details Response</h2>
-                      <table className="w-full border border-gray-300">
-                      <tbody>
-            {verificationResult
-              ? Object.entries(verificationResult.result || {}).map(([key, value]) => (
-                  <tr key={key} className="border-b">
-                    <td className="p-2 font-medium bg-gray-100">{key.replace(/_/g, ' ')}</td>
-                    <td className="p-2">{value || "N/A"}</td>
-                  </tr>
-                ))
-              : (
-                <tr>
-                  <td className="p-2" colSpan={2}>No data available</td>
-                </tr>
-              )}
-          </tbody>
-                      </table>
-                    </div>
+            <Card className="mt-4">
+              <div className="container mx-auto p-4">
+                <h1 className="text-xl font-bold mb-4">Document Details</h1>
 
-                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
-                      <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
-                      <SyntaxHighlighter
-                        language="json"
-                        style={atomDark}
-                        className="rounded-md p-2"
-                      >
-                        {JSON.stringify(verificationResult, null, 2)}
-                      </SyntaxHighlighter>
-                    </div>
+                <div className="flex flex-col md:flex-row gap-4 w-full">
+                  <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
+                    <h2 className="text-lg font-semibold mb-2">
+                      Details Response
+                    </h2>
+                    <table className="w-full border border-gray-300">
+                      {(() => {
+                        switch (verificationType) {
+                          case "pan":
+                            return  <tbody>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.full_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">
+                                Pan
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.result?.pan || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Type</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.pan_type || "N/A"}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="p-2 font-medium bg-gray-100">
+                                Status
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.result?.pan_status || "N/A"}
+                              </td>
+                            </tr>
+                          </tbody>;
+                          case "voter":
+                            return <tbody>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.full_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">
+                              Age
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.result?.age || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">State Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.address?.state_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">District Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.address?.district_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Gender</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.gender || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Parliamentary Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.parliamentary_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Assembly Name</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.assembly_name || "N/A"}
+                              </td>
+                            </tr>
+                            
+                          </tbody>;
+                          case "vehicle":
+                            return <tbody>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Name</td>
+                              <td className="p-2">
+                                {verificationResult?.owner_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">
+                              State Name
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.current_state_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">
+                              District Name
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.permanent_district_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">RTO Name</td>
+                              <td className="p-2">
+                                {verificationResult?.office_name || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Vehicle Class</td>
+                              <td className="p-2">
+                                {verificationResult?.vehicle_class_desc || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="border-b">
+                              <td className="p-2 font-medium bg-gray-100">Model</td>
+                              <td className="p-2">
+                                {verificationResult?.model || "N/A"}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="p-2 font-medium bg-gray-100">
+                              Color
+                              </td>
+                              <td className="p-2">
+                                {verificationResult?.color || "N/A"}
+                              </td>
+                            </tr>
+                            
+                          </tbody>;
+
+                        }
+                      })()}
+
+                     
+                    </table>
+                  </div>
+
+                  <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
+                    <h2 className="text-lg font-semibold mb-2">
+                      Full API Response
+                    </h2>
+                    <SyntaxHighlighter
+                      language="json"
+                      style={atomDark}
+                      className="rounded-md p-2"
+                    >
+                      {JSON.stringify(verificationResult, null, 2)}
+                    </SyntaxHighlighter>
                   </div>
                 </div>
-              </Card>
-            
+              </div>
+            </Card>
 
-
-
-
-           {verificationResult && (
+            {verificationResult && (
               <div
                 className={`mt-6 p-4 rounded-lg ${
-                  verificationResult.status === 'success'
+                  verificationResult.status === "success"
                     ? "bg-green-50 border border-green-200"
                     : "bg-red-50 border border-red-200"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  {verificationResult.status === 'success' ? (
+                  {verificationResult.status === "success" ? (
                     <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
                   ) : (
                     <AlertCircle className="h-6 w-6 text-red-600 mt-0.5" />
@@ -375,18 +492,18 @@ case "vehicle":
                   <div>
                     <h3
                       className={`font-medium ${
-                        verificationResult.status === 'success'
+                        verificationResult.status === "success"
                           ? "text-green-800"
                           : "text-red-800"
                       }`}
                     >
-                      {verificationResult.status === 'success'
+                      {verificationResult.status === "success"
                         ? "Verification Successful"
                         : "Verification Failed"}
                     </h3>
                     <p
                       className={`text-sm ${
-                        verificationResult.status === 'success'
+                        verificationResult.status === "success"
                           ? "text-green-700"
                           : "text-red-700"
                       }`}
