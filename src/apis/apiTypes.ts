@@ -1,4 +1,5 @@
 import Register from "../pages/Register";
+
 export interface LoginPayload {
   username: string;
   password: string;
@@ -80,6 +81,19 @@ export interface PassportResponse{
   message: string;
   result: object;
 }
+
+export interface DlPayload{
+  dl_no: string;
+  dob: string;
+ 
+}
+
+export interface DlResponse{
+  http_status_code: number,
+  message: string;
+  result: object;
+}
+
 export interface ErrorResponse {
   detail: [
     {

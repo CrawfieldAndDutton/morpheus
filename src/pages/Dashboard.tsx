@@ -60,6 +60,13 @@ const Dashboard: React.FC = () => {
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
       credits: 20,
     },
+    {
+      id: "dl",
+      name: "Driving Licence Verification",
+      description: "Verify Driving Licence Details",
+      icon: <FileText className="h-8 w-8 text-kycfabric-gold" />,
+      credits: 15,
+    },
   ];
 
   const recentVerifications = [

@@ -82,6 +82,23 @@ const verificationTypes = {
     validation: (value: string) => /^[A-Z]{1}[0-9]{7}$/.test(value),
     errorMessage: "Please enter a valid passport number (e.g., A1234567)",
   },
+  dl: {
+    title: "Driving Licence Verification",
+    description: "Verify Driving Licence Details",
+    placeholder: "AB1122334455667",
+    dobPlaceholder: "DD/MM/YYYY", // Add placeholder for DOB
+    icon: <FileText className="h-8 w-8" />,
+    pattern: "^(?:[A-Z]{2}[0-9]{13})$",
+    dobPattern: "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$", // Add pattern for DOB
+    credits: 15,
+    validation: (value: string) => /^(?:[A-Z]{2}[0-9]{13})$/.test(value),
+    dobValidation: (value: string) => /^(?:[A-Z]{2}[0-9]{13})$/.test(value),// Add validation for DOB
+    errorMessage: "Please enter a valid Driving Licence number (e.g., MH0320080022135)",
+    dobErrorMessage: "Please enter a valid date of birth (e.g., 01/01/2000)",// Add error message for DOB
+  
+  },
+
+
 };
 
 type VerificationType = keyof typeof verificationTypes;
@@ -90,7 +107,7 @@ const VerificationForm: React.FC = () => {
   const { type } = useParams<{ type: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  const [dob, setDob] = useState("");
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
@@ -126,6 +143,10 @@ const VerificationForm: React.FC = () => {
     credits,
     validation,
     errorMessage,
+    dobPlaceholder,
+    dobPattern,
+    dobValidation,
+    dobErrorMessage,
   } = verificationTypes[verificationType];
 
   // const handleVerification = (e: React.FormEvent) => {
@@ -194,8 +215,15 @@ const VerificationForm: React.FC = () => {
       });
       return;
     }
+    if (verificationType === "dl" && !dobValidation(dob)) {
+      toast({
+        title: "Invalid Date of Birth",
+        description: dobErrorMessage,
+        variant: "destructive",
+      });
+      return;
+    }
     setIsLoading(true);
-
     try {
       let response;
       switch (verificationType) {
@@ -210,6 +238,10 @@ const VerificationForm: React.FC = () => {
         case "voter":
           response = await verifyApi.voter({ epic_no: documentNumber });
           break;
+
+          case "dl":
+        response = await verifyApi.dl({ dl_no: documentNumber, dob });
+        break;
 
         default:
           throw new Error("Unsupported verification type");
@@ -281,10 +313,24 @@ const VerificationForm: React.FC = () => {
                   disabled={isLoading || verificationResult !== null}
                   autoFocus
                 />
-                <p className="text-xs text-muted-foreground">
-                  This verification will deduct {credits} credits from your
-                  account
-                </p>
+               {verificationType === "dl" && (
+                  <>
+                    <Label htmlFor="dob">Date of Birth</Label>
+                    <Input
+                      id="dob"
+                      placeholder={dobPlaceholder}
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      pattern={dobPattern}
+                      className="uppercase"
+                      disabled={isLoading || verificationResult !== null}
+                    />
+                  </>
+              )}
+              <p className="text-xs text-muted-foreground">
+                This verification will deduct {credits} credits from your
+                account
+              </p>
               </div>
 
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -404,7 +450,7 @@ const VerificationForm: React.FC = () => {
                             <tr className="border-b">
                               <td className="p-2 font-medium bg-gray-100">Name</td>
                               <td className="p-2">
-                                {verificationResult?.owner_name || "N/A"}
+                                {verificationResult?.result?.owner_name || "N/A"}
                               </td>
                             </tr>
                             <tr className="border-b">
@@ -412,7 +458,7 @@ const VerificationForm: React.FC = () => {
                               State Name
                               </td>
                               <td className="p-2">
-                                {verificationResult?.current_state_name || "N/A"}
+                                {verificationResult?.result?.current_state_name || "N/A"}
                               </td>
                             </tr>
                             <tr className="border-b">
@@ -420,25 +466,25 @@ const VerificationForm: React.FC = () => {
                               District Name
                               </td>
                               <td className="p-2">
-                                {verificationResult?.permanent_district_name || "N/A"}
+                                {verificationResult?.result?.permanent_district_name || "N/A"}
                               </td>
                             </tr>
                             <tr className="border-b">
                               <td className="p-2 font-medium bg-gray-100">RTO Name</td>
                               <td className="p-2">
-                                {verificationResult?.office_name || "N/A"}
+                                {verificationResult?.result?.office_name || "N/A"}
                               </td>
                             </tr>
                             <tr className="border-b">
                               <td className="p-2 font-medium bg-gray-100">Vehicle Class</td>
                               <td className="p-2">
-                                {verificationResult?.vehicle_class_desc || "N/A"}
+                                {verificationResult?.result?.vehicle_class_desc || "N/A"}
                               </td>
                             </tr>
                             <tr className="border-b">
                               <td className="p-2 font-medium bg-gray-100">Model</td>
                               <td className="p-2">
-                                {verificationResult?.model || "N/A"}
+                                {verificationResult?.result?.model || "N/A"}
                               </td>
                             </tr>
                             <tr>
@@ -446,7 +492,7 @@ const VerificationForm: React.FC = () => {
                               Color
                               </td>
                               <td className="p-2">
-                                {verificationResult?.color || "N/A"}
+                                {verificationResult?.result?.color || "N/A"}
                               </td>
                             </tr>
                             
