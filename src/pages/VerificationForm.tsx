@@ -60,7 +60,7 @@ const verificationTypes = {
   vehicle: {
     title: "Vehicle RC Verification",
     description: "Verify Registration Certificate",
-    placeholder: "MH01AB1234/21BH0000AA",
+    placeholder: "MH01AB1234/21BH0000A",
     icon: <FileText className="h-8 w-8" />,
     pattern:
       "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{1})$",
@@ -70,7 +70,7 @@ const verificationTypes = {
         value
       ),
     errorMessage:
-      "Please enter a valid RC number (e.g., MH01AB1234, 21BH0000AA)",
+      "Please enter a valid RC number (e.g., MH01AB1234, 21BH0000A)",
   },
   passport: {
     title: "Passport Verification",
@@ -207,7 +207,7 @@ const VerificationForm: React.FC = () => {
         break;
      
       
-      case "vehicle":
+case "vehicle":
         response = await verifyApi.vehicle({ reg_no: documentNumber });
         break;
 
@@ -323,24 +323,20 @@ const VerificationForm: React.FC = () => {
                     <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
                       <h2 className="text-lg font-semibold mb-2">Details Response</h2>
                       <table className="w-full border border-gray-300">
-                        <tbody>
-                          <tr className="border-b">
-                            <td className="p-2 font-medium bg-gray-100">Name</td>
-                            <td className="p-2">{verificationResult?.result?.full_name || "N/A"}</td>
-                          </tr>
-                          <tr className="border-b">
-                            <td className="p-2 font-medium bg-gray-100">PAN</td>
-                            <td className="p-2">{verificationResult?.result?.pan || "N/A"}</td>
-                          </tr>
-                          <tr className="border-b">
-                            <td className="p-2 font-medium bg-gray-100">Type</td>
-                            <td className="p-2">{verificationResult?.result?.pan_type || "N/A"}</td>
-                          </tr>
-                          <tr>
-                            <td className="p-2 font-medium bg-gray-100">Status</td>
-                            <td className="p-2">{verificationResult?.result?.pan_status || "N/A"}</td>
-                          </tr>
-                        </tbody>
+                      <tbody>
+            {verificationResult
+              ? Object.entries(verificationResult.result || {}).map(([key, value]) => (
+                  <tr key={key} className="border-b">
+                    <td className="p-2 font-medium bg-gray-100">{key.replace(/_/g, ' ')}</td>
+                    <td className="p-2">{value || "N/A"}</td>
+                  </tr>
+                ))
+              : (
+                <tr>
+                  <td className="p-2" colSpan={2}>No data available</td>
+                </tr>
+              )}
+          </tbody>
                       </table>
                     </div>
 
