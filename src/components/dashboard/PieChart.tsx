@@ -28,8 +28,8 @@ export function PieChartUi() {
     
     const fetchData = async () => {
       try {
-        const response = await dashboardApi.getApiUsage();
-        setDashboardData(response);
+        //const response = await dashboardApi.getApiUsage();
+       // setDashboardData(response);
       } catch (err) {
         console.log("error in fetching dashboard")
       } 

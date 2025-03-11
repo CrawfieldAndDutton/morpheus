@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +21,23 @@ import {
 import LogoutNavbar from "@/components/Layout/LogoutNavbar";
 import { LineChartUi } from "@/components/dashboard/LineChart";
 import { PieChartUi } from "@/components/dashboard/PieChart";
+import { dashboardApi } from "@/apis/modules/dashboard";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-
+  const [credits,setCredits] = useState();
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await dashboardApi.getCredits();
+          
+          console.log(response);
+        } catch (err) {
+          console.log("error in fetching dashboard")
+        } 
+      };
+      fetchData();  
+    }, []);
   // Simulated data - in a real app, this would come from your API
   const creditBalance = 1250;
 
@@ -243,7 +256,7 @@ const Dashboard: React.FC = () => {
           {/*Analytics of api usage*/}
           <div className="display flex gap-4 max-sm:flex-col">
             {/*pie chart ui*/}
-            <PieChartUi />
+          
             {/*Line chart section */}
             <LineChartUi />
           </div>

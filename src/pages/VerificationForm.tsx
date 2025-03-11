@@ -63,10 +63,10 @@ const verificationTypes = {
     placeholder: "MH01AB1234/21BH0000AA",
     icon: <FileText className="h-8 w-8" />,
     pattern:
-      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
+      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
     credits: 15,
     validation: (value: string) =>
-      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}|[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/.test(
+      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/.test(
         value
       ),
     errorMessage:
@@ -94,10 +94,8 @@ const VerificationForm: React.FC = () => {
 
   const [documentNumber, setDocumentNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<null | {
-    verified: boolean;
-    message: string;
-  }>(null);
+  const [verificationResult, setVerificationResult] = useState(null);
+ 
 
   // Check if verification type is valid
   useEffect(() => {
@@ -110,6 +108,11 @@ const VerificationForm: React.FC = () => {
       navigate("/dashboard");
     }
   }, [type, navigate, toast]);
+
+  useEffect(() => {
+    console.log(verificationResult, "Verification Result");
+  }, [verificationResult]);
+
 
   // If type is not defined or invalid, return null
   if (!type || !Object.keys(verificationTypes).includes(type)) {
@@ -197,6 +200,8 @@ const VerificationForm: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await verifyApi.pan({ pan: documentNumber });
+      console.log(response);
+      setVerificationResult(response.data.result);
       toast({
         title: response.data.result ? "Verified" : "Verification Failed",
         description: response.data.result
@@ -217,9 +222,10 @@ const VerificationForm: React.FC = () => {
     }
   };
 
+  
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <Button
             variant="outline"
@@ -288,74 +294,66 @@ const VerificationForm: React.FC = () => {
                 )}
               </Button>
             </form>
+            
+      
+            
+              <Card className="mt-4">
+                <div className="container mx-auto p-4">
+                  <h1 className="text-xl font-bold mb-4">Document Details</h1>
 
-            <Card className="mt-4">
-  <div className="container mx-auto p-4">
-    <h1 className="text-xl font-bold mb-4">Document Details</h1>
-    <div className="flex gap-4 w-full">
-      {/* Full API Response with JSON Syntax Highlighting */}
-      <div className="w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
-        <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
-        <SyntaxHighlighter
-          language="json"
-          style={atomDark}
-          className="rounded-md p-2"
-        >
-          {JSON.stringify(
-            {
-              status: "success",
-              message: "PAN verification completed",
-              details: {
-                full_name: "Soumyajit Bhadra",
-                pan: "DQQPB0223C",
-                pan_type: "Personal",
-                pan_status: "Active",
-              },
-              verified: true,
-            },
-            null,
-            2
-          )}
-        </SyntaxHighlighter>
-      </div>
+                  <div className="flex flex-col md:flex-row gap-4 w-full">
+                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-white">
+                      <h2 className="text-lg font-semibold mb-2">Details Response</h2>
+                      <table className="w-full border border-gray-300">
+                        <tbody>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">Name</td>
+                            <td className="p-2">{verificationResult?.result?.full_name || "N/A"}</td>
+                          </tr>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">PAN</td>
+                            <td className="p-2">{verificationResult?.result?.pan || "N/A"}</td>
+                          </tr>
+                          <tr className="border-b">
+                            <td className="p-2 font-medium bg-gray-100">Type</td>
+                            <td className="p-2">{verificationResult?.result?.pan_type || "N/A"}</td>
+                          </tr>
+                          <tr>
+                            <td className="p-2 font-medium bg-gray-100">Status</td>
+                            <td className="p-2">{verificationResult?.result?.pan_status || "N/A"}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
-      {/* Human Readable Details */}
-      <div className="w-1/2 shadow-md rounded-lg p-4 bg-white">
-        <h2 className="text-lg font-semibold mb-2">Details Response</h2>
-        <div className="text-sm space-y-2">
-        <p>
-            <span className="font-medium">Name: </span>
-            <span className="font-medium"> Soumyajit Bhadra</span>
-          </p>
-          <p>
-            <span className="font-medium">PAN: </span> 
-            <span className="font-medium"> DQQPB0223C</span>
-          </p>
-          <p>
-            <span className="font-medium">Type: </span> 
-            <span className="font-medium"> Personal</span>
-          </p>
-          <p>
-            <span className="font-medium">Status: </span> 
-            <span className="font-medium"> Active</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</Card>
+                    <div className="w-full md:w-1/2 shadow-md rounded-lg p-4 bg-gray-50">
+                      <h2 className="text-lg font-semibold mb-2">Full API Response</h2>
+                      <SyntaxHighlighter
+                        language="json"
+                        style={atomDark}
+                        className="rounded-md p-2"
+                      >
+                        {JSON.stringify(verificationResult, null, 2)}
+                      </SyntaxHighlighter>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            
 
 
-            {verificationResult && (
+
+
+           {verificationResult && (
               <div
                 className={`mt-6 p-4 rounded-lg ${
-                  verificationResult.verified
+                  verificationResult.status === 'success'
                     ? "bg-green-50 border border-green-200"
                     : "bg-red-50 border border-red-200"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  {verificationResult.verified ? (
+                  {verificationResult.status === 'success' ? (
                     <CheckCircle className="h-6 w-6 text-green-600 mt-0.5" />
                   ) : (
                     <AlertCircle className="h-6 w-6 text-red-600 mt-0.5" />
@@ -363,18 +361,18 @@ const VerificationForm: React.FC = () => {
                   <div>
                     <h3
                       className={`font-medium ${
-                        verificationResult.verified
+                        verificationResult.status === 'success'
                           ? "text-green-800"
                           : "text-red-800"
                       }`}
                     >
-                      {verificationResult.verified
+                      {verificationResult.status === 'success'
                         ? "Verification Successful"
                         : "Verification Failed"}
                     </h3>
                     <p
                       className={`text-sm ${
-                        verificationResult.verified
+                        verificationResult.status === 'success'
                           ? "text-green-700"
                           : "text-red-700"
                       }`}

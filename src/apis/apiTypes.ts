@@ -44,18 +44,9 @@ export interface PanPayload{
 }
 
 export interface PanResponse{
-  txn_id: string;
-  pan: string;
-  status: string;
+ http_status_code: number,
   message: string;
-  status_code: number,
-  result: {
-    pan_status: string;
-    pan_type: string;
-    pan: string,
-    full_name: string;
-  }
-  raw_response: object;
+  result: object;
 }
 
 export interface VehiclePayload{
@@ -63,18 +54,9 @@ export interface VehiclePayload{
 }
 
 export interface VehicleResponse{
-  status: string;
-  reg_no: string;
-  state: string;
-  owner_name: string;
-  vehicle_manufacturer: string;
-  model: string;
-  registration_date: string;
-  registration_valid_upto: string;
-  insurance_valid_upto: string;
-  pucc_valid_upto: string;
-  raw_response:  object;
+  http_status_code: number,
   message: string;
+  result: object;
 }
 
 
