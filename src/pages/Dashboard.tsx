@@ -26,20 +26,49 @@ import { dashboardApi } from "@/apis/modules/dashboard";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [credits,setCredits] = useState();
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [dailyCredit,setDailyCredit] = useState(0);
+
+  //fetching pending credits
    useEffect(() => {
       const fetchData = async () => {
         try {
           const response = await dashboardApi.getCredits();
-          
-          console.log(response);
+          setCredits(response.data.result.pending_credits);
         } catch (err) {
           console.log("error in fetching dashboard")
         } 
       };
       fetchData();  
     }, []);
+
+  //for total credits used
+  useEffect(()=>{
+      const fetchDailyCredit = async () =>{
+        try{
+          const responsePAN = await dashboardApi.getWeeklyCreditUsage(`KYC_PAN`);
+          const responseRC = await dashboardApi.getWeeklyCreditUsage(`KYC_RC`);
+          const responseDL = await dashboardApi.getWeeklyCreditUsage(`KYC_DL`);
+          const responsePASSPORT = await dashboardApi.getWeeklyCreditUsage(`KYC_PASSPORT`);
+          const responseVOTER = await dashboardApi.getWeeklyCreditUsage(`KYC_VOTER`);
+          
+          const panCredits :number = responsePAN.data.result.find(item => item.date === currentDate)?.total_amount || 0 
+          const rcCredits :number = responseRC.data.result.find(item => item.date === currentDate)?.total_amount  || 0
+          const dlCredits :number = responseDL.data.result.find(item => item.date === currentDate)?.total_amount  || 0
+          const passportCredits :number = responsePASSPORT.data.result.find(item => item.date === currentDate)?.total_amount  || 0
+          const voterCredits: number = responseVOTER.data.result.find(item => item.date === currentDate)?.total_amount  || 0
+  
+          setDailyCredit(panCredits + rcCredits + dlCredits + passportCredits + voterCredits)
+  
+        }catch(err){
+          console.log("error in fetching dashboard");
+        }
+      }
+      fetchDailyCredit()
+    },[])
+
   // Simulated data - in a real app, this would come from your API
-  const creditBalance = 1250;
+  const creditBalance = credits;
 
   const verificationMethods = [
     {
@@ -235,7 +264,7 @@ const Dashboard: React.FC = () => {
                   <div className=" hover:bg-transparent max-sm:text-sm">Daily Credit Used </div>
                   <span className="text-xl text-muted-foreground">
                     {"  "}
-                    400
+                    {dailyCredit}
                   </span>
                 </div>
 
@@ -256,7 +285,7 @@ const Dashboard: React.FC = () => {
           {/*Analytics of api usage*/}
           <div className="display flex gap-4 max-sm:flex-col">
             {/*pie chart ui*/}
-          
+           <PieChartUi/>
             {/*Line chart section */}
             <LineChartUi />
           </div>

@@ -58,8 +58,28 @@ export interface VehicleResponse{
   message: string;
   result: object;
 }
+export interface VoterPayload{
+  epic_no: string;
+}
 
+export interface VoterResponse{
+  http_status_code: number,
+  message: string;
+  result: object;
+}
 
+export interface PassportPayload{
+  file_number: string;
+  dob: string;
+  name: string;
+
+}
+
+export interface PassportResponse{
+  http_status_code: number,
+  message: string;
+  result: object;
+}
 export interface ErrorResponse {
   detail: [
     {

@@ -21,15 +21,29 @@ import { dashboardApi } from "@/apis/modules/dashboard";
 
 export function PieChartUi() {
 
-  const [dashboardData, setDashboardData] = useState<any>([]);
+  
+  const [panCall , setPanCall] = useState(0);
+  const [dlCall , setdlCall] = useState(0);
+  const [passportCall , setPassportCall] = useState(0);
+  const [rcCall , setRcCall] = useState(0);
+  const [voterCall , setVoterCall] = useState(0);
+  
+  
+
 
   //used to get the data whenever the user comes to dashboard
   useEffect(() => {
     
     const fetchData = async () => {
       try {
-        //const response = await dashboardApi.getApiUsage();
-       // setDashboardData(response);
+        const response = await dashboardApi.getTotalCredits();
+        setPanCall(response.data.result?.KYC_PAN || null)
+        setdlCall(response.data.result?.KYC_DL || null)
+        setPassportCall(response.data.result?.KYC_PASSPORT || null)
+        setVoterCall(response.data.result?.KYC_VOTER || null)
+        setRcCall(response.data.result?.KYC_RC || null)
+        
+
       } catch (err) {
         console.log("error in fetching dashboard")
       } 
@@ -38,6 +52,15 @@ export function PieChartUi() {
     
   }, []);
   
+  const dashboardData = [
+    { type: "PAN", calls: panCall },
+    { type: "VOTER", calls:  voterCall },
+    { type: "RC", calls: rcCall },
+    { type: "PASSPORT", calls: passportCall },
+    { type: "DRIVING LICENSE", calls: dlCall }
+  ]
+
+  
   //sorting the data to map it with the colors array
   const sortedChartData = [...dashboardData].sort((a, b) => b.calls - a.calls);
   
@@ -45,9 +68,10 @@ export function PieChartUi() {
   const fillColors = [
     "hsl(44, 90%, 50.3%)",
     "hsl(44, 90%, 60%)" ,
-    "hsl(44, 90%, 68%)" ,
-    "hsl(44, 90%, 78%)" ,
-    "hsl(44, 90%, 87%)",
+    "hsl(44, 90%, 63%)" ,
+    "hsl(44, 90%, 70%)" ,
+    "hsl(44, 90%, 82%)",
+    
   ]
 
   //mapping the colors with the coming values
@@ -55,33 +79,12 @@ export function PieChartUi() {
     ...item,
     fill: fillColors[index], // Default to last color if out of range
   }));
+
   
   
   //not using anything
   const chartConfig: ChartConfig = {
-    visitors: {
-      label: "pan",
-    },
-    PAN: {
-      label: "pan",
-      color: "",
-    },
-    Aadhar: {
-      label: "aadhar",
-      color: "hsl(212, 95%, 68%)",
-    },
-    Voter: {
-      label: "voter",
-      color: "hsl(216, 92%, 60%)",
-    },
-    VehicleRC: {
-      label: "Vehicle RC",
-      color: "hsl(210, 98%, 78%)",
-    },
-    Passport: {
-      label: "Passport",
-      color: "hsl(212, 97%, 87%)",
-    },
+    
   };
 
 
@@ -101,6 +104,7 @@ export function PieChartUi() {
             <ChartTooltip
               content={<ChartTooltipContent  hideLabel />}
             />
+            
             <Pie
               
               data={schartData}

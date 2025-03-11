@@ -17,6 +17,7 @@ const httpClient = axios.create({
   timeout: 10000,
   headers: {
     // "Content-Type": "application/x-www-form-urlencoded",
+    "ngrok-skip-browser-warning": "69420",
     "Content-Type": "application/json",
   },
 });
@@ -29,9 +30,9 @@ httpClient.interceptors.request.use(
       const token =
         customConfig?.headers?.token ||
         (customConfig?.headers?.useRefreshToken
-          ? localStorage.getItem("token")
-          : localStorage.getItem("refreshToken"));
-      if (token) {
+          ? localStorage.getItem("refreshToken")
+          : localStorage.getItem("token"));
+          if (token) {
         // Use AxiosHeaders type for headers
         (customConfig.headers as AxiosHeaders).set(
           "Authorization",

@@ -18,6 +18,6 @@ export const authApi = {
 
   logout: (data: LogoutPayload) =>
     httpClient.post<string>("/dashboard/api/v1/auth/logout", data, {
-      headers: { useAuth: true, useRefreshToken: true },
+      headers: { useAuth: true,  },
     }),
 };
