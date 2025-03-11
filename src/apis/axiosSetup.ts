@@ -28,9 +28,9 @@ httpClient.interceptors.request.use(
       const token =
         customConfig?.headers?.token ||
         (customConfig?.headers?.useRefreshToken
-          ? localStorage.getItem("token")
-          : localStorage.getItem("refreshToken"));
-      if (token) {
+          ? localStorage.getItem("refreshToken")
+          : localStorage.getItem("token"));
+          if (token) {
         // Use AxiosHeaders type for headers
         (customConfig.headers as AxiosHeaders).set(
           "Authorization",

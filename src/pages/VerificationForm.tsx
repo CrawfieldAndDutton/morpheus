@@ -63,10 +63,10 @@ const verificationTypes = {
     placeholder: "MH01AB1234/21BH0000AA",
     icon: <FileText className="h-8 w-8" />,
     pattern:
-      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$",
+      "^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{1})$",
     credits: 15,
     validation: (value: string) =>
-      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{2})$/.test(
+      /^(?:[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}||[0-9]{2}[A-Z]{2}[0-9]{4}[A-Z]{1})$/.test(
         value
       ),
     errorMessage:
@@ -198,9 +198,27 @@ const VerificationForm: React.FC = () => {
       return;
     }
     setIsLoading(true);
-    try {
-      const response = await verifyApi.pan({ pan: documentNumber });
-      console.log(response);
+
+   try {
+    let response;
+    switch (verificationType) {
+      case "pan":
+        response = await verifyApi.pan({ pan: documentNumber });
+        break;
+     
+      
+      case "vehicle":
+        response = await verifyApi.vehicle({ reg_no: documentNumber });
+        break;
+
+        case "voter":
+          response = await verifyApi.voter({ epic_no: documentNumber });
+          break;
+      
+      default:
+        throw new Error("Unsupported verification type");
+    }
+
       setVerificationResult(response.data.result);
       toast({
         title: response.data.result ? "Verified" : "Verification Failed",
