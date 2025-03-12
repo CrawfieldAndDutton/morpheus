@@ -637,12 +637,27 @@ const VerificationForm: React.FC = () => {
                               {verificationResult?.result?.result?.renewal_date || "N/A"}
                             </td>
                           </tr>
-                          <tr>
+                          <tr className="border-b">
                             <td className="p-2 font-medium bg-gray-100">Gender</td>
                             <td className="p-2">
                               {verificationResult?.result?.result?.gender || "N/A"}
                             </td>
                           </tr>
+                          {verificationResult?.result?.result?.user_photo && (
+                            <tr>
+                              <td className="p-2 font-medium bg-gray-100">User Photo</td>
+                              <td className="p-2">
+                                {verificationResult?.result?.result?.user_photo && (
+                                  <img 
+                                    src={`data:image/jpeg;base64,${verificationResult.result.result.user_photo}`}
+                                    alt="User Photo"
+                                    className="max-w-[200px] rounded-md shadow-sm"
+                                  />
+                                )}
+                                
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       );
                   case "passport":
@@ -698,7 +713,7 @@ const VerificationForm: React.FC = () => {
             <SyntaxHighlighter
               language="json"
               style={atomDark}
-              className="rounded-md p-2 "
+              className="rounded-md p-2 overflow-y-auto max-h-[600px] text-xs"
             >
               {JSON.stringify(verificationResult, null, 2)}
             </SyntaxHighlighter>

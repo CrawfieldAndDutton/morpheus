@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import { dashboardApi } from "@/apis/modules/dashboard";
+import { ChevronDown } from 'lucide-react';
 
 // Define TypeScript interfaces for data and chart config
 interface ChartData {
@@ -26,10 +27,10 @@ interface ChartData {
 // Function to get last 7 days from today
 function getLast7Days() {
   const today = new Date();
-  let days = [];
+  const days = [];
 
   for (let i = 6; i >= 0; i--) {
-    let d = new Date();
+    const d = new Date();
     d.setDate(today.getDate() - i);
     const formattedDate = d.toISOString().split("T")[0]; // Format: YYYY-MM-DD
     days.push({ date: formattedDate, day: d.getDay() });
@@ -72,7 +73,7 @@ export function LineChartUi(): JSX.Element {
   
 
   // Create a result object with all days defaulted to count = 0
-  let weeklyData = last7Days.map(({ date, day }) => {
+  const weeklyData = last7Days.map(({ date, day }) => {
     const existingData = lineData.find((d) => d.date === date);
     return {
       days: weekDays[day],
@@ -96,11 +97,12 @@ export function LineChartUi(): JSX.Element {
         <CardTitle>Weekly API Usage</CardTitle>
         <div className="z-10">
         <div className="relative inline-block text-left">
-      <button
+      <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-1 bg-yellow-200 text-black rounded-lg focus:outline-none"
+        className="bg-yellow-200 px-4 py-1 rounded-lg  text-black flex items-center gap-2"
       >
         {selected}
+        <ChevronDown className="h-4 w-4" />
       </button>
 
       {isOpen && (

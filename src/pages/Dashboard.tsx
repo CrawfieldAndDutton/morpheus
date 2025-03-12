@@ -370,7 +370,7 @@ const Dashboard: React.FC = () => {
                 <Card
                   key={method.id}
                   className="hover:border-primary transition-all cursor-pointer"
-                  onClick={() => navigate(`/verification/${method.id}`)}
+                  onClick={() => navigate(`/verification-form/${method.id}`)}
                 >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { DollarSign, CreditCard, Shield, ArrowRight, Check, Loader2 } from "lucide-react";
+import { DollarSign, CreditCard, Shield, ArrowRight, Check, Loader2, ArrowLeft } from "lucide-react";
 
 const CreditPurchase: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -78,6 +78,13 @@ const CreditPurchase: React.FC = () => {
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
         <div>
+        <Button
+            variant="outline"
+            className="mb-4"
+            onClick={() => navigate("/dashboard")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
+          </Button>
           <h1 className="text-3xl font-bold tracking-tight">Purchase Credits</h1>
           <p className="text-muted-foreground">
             Buy verification credits to use for your KYC processes
