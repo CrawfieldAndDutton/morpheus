@@ -63,7 +63,6 @@ const Login: React.FC = () => {
           description: error.response.data?.detail || "Login failed pls try again",
           variant: "destructive",
         });
-      
     } finally {
       setIsLoading(false);
     }
