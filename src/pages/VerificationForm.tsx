@@ -301,8 +301,7 @@ const VerificationForm: React.FC = () => {
           break;
 
         case "aadhaar":
-          // Add implementation for Aadhaar verification
-          throw new Error("Aadhaar verification not implemented yet");
+          response = await verifyApi.aadhaar({ aadhaar: documentNumber });
           break;
 
         case "passport":
@@ -498,7 +497,6 @@ const VerificationForm: React.FC = () => {
                           <td className="p-2">
 
                             {verificationResult?.result?.result?.full_name || "N/A"}
-                            {console.log("hi"+verificationResult?.result)}
                           </td>
                         </tr>
                         <tr className="border-b">
@@ -521,6 +519,34 @@ const VerificationForm: React.FC = () => {
                         </tr>
                       </tbody>
                     );
+
+                    case "aadhaar":
+                    return (
+
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.message || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Aadhaar Link Status</td>
+                          <td className="p-2">
+
+                            {verificationResult?.result?.result?.aadhaar_link_status || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Pan</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.result?.pan || "N/A"}
+                          </td>
+                        </tr>
+                        
+                      </tbody>
+                    );
+
                   case "voter":
                     return (
                       <tbody>

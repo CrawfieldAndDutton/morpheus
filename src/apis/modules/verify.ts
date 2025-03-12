@@ -1,5 +1,5 @@
 import httpClient from "@/apis/axiosSetup";
-import { PanPayload, PanResponse, VehiclePayload, VehicleResponse, VoterPayload, VoterResponse, PassportPayload, PassportResponse, DlPayload, DlResponse  } from "@/apis/apiTypes";
+import { PanPayload, PanResponse, VehiclePayload, VehicleResponse, VoterPayload, VoterResponse, PassportPayload, PassportResponse, DlPayload, DlResponse, AadhaarPayload, AadhaarResponse  } from "@/apis/apiTypes";
 
 export const verifyApi = {
   pan: (data: PanPayload) =>
@@ -18,6 +18,8 @@ export const verifyApi = {
   dl: (data: DlPayload) =>
     httpClient.post<DlResponse>("/dashboard/api/v1/dl/verify", data, {headers: { useAuth: true,}}),
 
+  aadhaar: (data: AadhaarPayload) =>
+    httpClient.post<AadhaarResponse>("/dashboard/api/v1/aadhaar/verify", data, {headers: { useAuth: true, }}),
 
 };
 

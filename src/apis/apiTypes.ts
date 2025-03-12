@@ -69,6 +69,20 @@ export interface VoterResponse{
   result: object;
 }
 
+
+export interface AadhaarPayload{
+  aadhaar : string;
+}
+
+export interface AadhaarResponse{
+  http_status_code: number,
+  message: string;
+  result: object;
+}
+
+
+
+
 export interface PassportPayload{
   file_number: string;
   dob: string;
