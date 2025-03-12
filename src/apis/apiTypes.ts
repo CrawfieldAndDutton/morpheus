@@ -103,3 +103,11 @@ export interface ErrorResponse {
     }
   ];
 }
+
+
+export interface DashboardResponse {
+  type: string;
+  calls: number;
+}
+
+export type DashboardResponseArray = DashboardResponse[];

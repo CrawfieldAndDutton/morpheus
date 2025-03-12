@@ -5,6 +5,7 @@ export const verifyApi = {
   pan: (data: PanPayload) =>
     httpClient.post<PanResponse>("/dashboard/api/v1/pan/verify", data, {headers: { useAuth: true, }}),
 
+
   vehicle: (data: VehiclePayload) =>
     httpClient.post<VehicleResponse>("/dashboard/api/v1/rc/verify", data, {headers: { useAuth: true,}}),
 

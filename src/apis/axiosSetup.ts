@@ -8,7 +8,8 @@ import config from "@/apis/config";
 
 // Custom config type for Axios with optional auth token
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  useAuth?: boolean; // Flag to indicate if auth is needed
+  useAuth?: boolean;
+  useRefreshToken?: boolean; // Flag to indicate if auth is needed
 }
 
 const httpClient = axios.create({
@@ -16,6 +17,7 @@ const httpClient = axios.create({
   timeout: 10000,
   headers: {
     // "Content-Type": "application/x-www-form-urlencoded",
+    "ngrok-skip-browser-warning": "69420",
     "Content-Type": "application/json",
   },
 });
