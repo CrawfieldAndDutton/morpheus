@@ -18,6 +18,7 @@ export const verifyApi = {
   dl: (data: DlPayload) =>
     httpClient.post<DlResponse>("/dashboard/api/v1/dl/verify", data, {headers: { useAuth: true,}}),
 
+
 };
 
 

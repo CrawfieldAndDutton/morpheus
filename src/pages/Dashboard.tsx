@@ -371,11 +371,7 @@ const Dashboard: React.FC = () => {
                   key={method.id}
                   className="hover:border-primary transition-all cursor-pointer"
                   onClick={() => {
-                    if (method.id === "aadhaar") {
-                      navigate("/aadhaar-verification");
-                    } else {
                       navigate(`/verification-form/${method.id}`);
-                    }
                   }}
                 >
                   <CardHeader className="pb-2">
