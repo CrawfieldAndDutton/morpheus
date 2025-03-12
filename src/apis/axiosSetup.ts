@@ -5,6 +5,9 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import config from "@/apis/config";
+import store from "@/store/store";
+import { logout } from "@/store/userSlice";
+import { toast } from "@/hooks/use-toast";
 
 // Custom config type for Axios with optional auth token
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -55,6 +58,17 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      
+      // Dispatch logout action to Redux
+      store.dispatch(logout());
+      
+      // Redirect to login page
+      window.location.href = '/#/login';
+    }
     console.error("API Error:", error);
     return Promise.reject(error);
   }

@@ -122,7 +122,7 @@ const Dashboard: React.FC = () => {
       dailyCalls: 10,
       description: "Shows total api calls PAN",
       icon: <FileText className="h-8 w-8 text-kycfabric-gold" />,
-      credits: 5,
+      credits: 2,
       totalCalls: 100,
     },
     {
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
       dailyCalls: 20,
       description: "Shows total api calls aadhar",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
-      credits: 10,
+      credits: 1,
       totalCalls: 100,
     },
     {
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
       dailyCalls: 30,
       description: "Shows total api calls Voter ",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
-      credits: 7,
+      credits: 5,
       totalCalls: 900,
     },
     {
@@ -149,7 +149,7 @@ const Dashboard: React.FC = () => {
       dailyCalls: 10,
       description: "Shows total api calls Vehicle RC",
       icon: <FileText className="h-8 w-8 text-kycfabric-gold" />,
-      credits: 15,
+      credits: 7.5,
       totalCalls: 200,
     },
     {
@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
       dailyCalls: 50,
       description: "Shows total api calls passport",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
-      credits: 20,
+      credits: 5,
       totalCalls: 150,
     },
   ];
@@ -370,7 +370,13 @@ const Dashboard: React.FC = () => {
                 <Card
                   key={method.id}
                   className="hover:border-primary transition-all cursor-pointer"
-                  onClick={() => navigate(`/verification-form/${method.id}`)}
+                  onClick={() => {
+                    if (method.id === "aadhaar") {
+                      navigate("/aadhaar-verification");
+                    } else {
+                      navigate(`/verification-form/${method.id}`);
+                    }
+                  }}
                 >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">

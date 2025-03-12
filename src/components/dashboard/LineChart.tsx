@@ -55,7 +55,7 @@ export function LineChartUi(): JSX.Element {
   
 
   //options for 7 days credit (later update needed use maps )
-  const options = ["PAN", "RC" ,"PASSPORT","DL","PASSPORT"];
+  const options = ["PAN", "RC" ,"DL","PASSPORT","VOTER"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,7 +99,7 @@ export function LineChartUi(): JSX.Element {
         <div className="relative inline-block text-left">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-yellow-200 px-4 py-1 rounded-lg  text-black flex items-center gap-2"
+        className="bg-yellow-200 px-4 py-1 rounded-lg text-black flex items-center gap-2"
       >
         {selected}
         <ChevronDown className="h-4 w-4" />

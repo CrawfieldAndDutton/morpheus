@@ -181,15 +181,17 @@ const VerificationForm: React.FC = () => {
     e.preventDefault();
     
     // Validate document number
-    if (!documentNumber) {
-      toast({
+    if (verificationType !== "passport") {
+      if (!documentNumber) {
+        toast({
         title: "Input Required",
-        description: "Please enter the document number to verify.",
-        variant: "destructive",
+          description: "Please enter the document number to verify.",
+          variant: "destructive",
       });
       return;
     }
-    
+    }
+    if (verificationType !== "passport") {
     if (!validation(documentNumber)) {
       toast({
         title: "Invalid Format",
@@ -198,7 +200,7 @@ const VerificationForm: React.FC = () => {
       });
       return;
     }
-    
+  }
     // Check DOB validation for DL verification
     if (verificationType === "dl") {
       if (!dob) {
@@ -320,6 +322,13 @@ const VerificationForm: React.FC = () => {
         variant: response.data.result?.status === "success" ? "default" : "destructive",
       });
     } catch (error) {
+      if (error.response?.status === 401) {
+        toast({
+          title: "Session Expired",
+          description: "Your session has timed out. Please login again.",
+          variant: "destructive",
+        });
+      }else{
       toast({
         title: "Error",
         description:
@@ -327,6 +336,7 @@ const VerificationForm: React.FC = () => {
           "An error occurred during verification.",
         variant: "destructive",
       });
+    }
     } finally {
       setIsLoading(false);
     }
@@ -475,7 +485,14 @@ const VerificationForm: React.FC = () => {
                 switch (verificationType) {
                   case "pan":
                     return (
+
                       <tbody>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.message || "N/A"}
+                          </td>
+                        </tr>
                         <tr className="border-b">
                           <td className="p-2 font-medium bg-gray-100">Name</td>
                           <td className="p-2">
@@ -507,6 +524,12 @@ const VerificationForm: React.FC = () => {
                   case "voter":
                     return (
                       <tbody>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.message || "N/A"}
+                          </td>
+                        </tr>
                         <tr className="border-b">
                           <td className="p-2 font-medium bg-gray-100">Name</td>
                           <td className="p-2">
@@ -554,6 +577,12 @@ const VerificationForm: React.FC = () => {
                   case "vehicle":
                     return (
                       <tbody>
+                         <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.message || "N/A"}
+                          </td>
+                        </tr>
                         <tr className="border-b">
                           <td className="p-2 font-medium bg-gray-100">Name</td>
                           <td className="p-2">
@@ -601,6 +630,12 @@ const VerificationForm: React.FC = () => {
                     case "dl":
                       return (
                         <tbody>
+                           <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.message || "N/A"}
+                          </td>
+                        </tr>
                           <tr className="border-b">
                             <td className="p-2 font-medium bg-gray-100">Name</td>
                             <td className="p-2">
@@ -664,33 +699,45 @@ const VerificationForm: React.FC = () => {
                     return (
                       <tbody>
                         <tr className="border-b">
-                          <td className="p-2 font-medium bg-gray-100">Name</td>
+                          <td className="p-2 font-medium bg-gray-100">Message</td>
                           <td className="p-2">
-                            {verificationResult?.result?.result?.name || "N/A"}
+                            {verificationResult?.result?.message || "N/A"}
                           </td>
                         </tr>
                         <tr className="border-b">
-                          <td className="p-2 font-medium bg-gray-100">Date of Birth</td>
+                          <td className="p-2 font-medium bg-gray-100">First Name</td>
                           <td className="p-2">
-                            {verificationResult?.result?.result?.dob || "N/A"}
+                            {verificationResult?.result?.result?.first_name || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Last Name</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.result?.last_name || "N/A"}
                           </td>
                         </tr>
                         <tr className="border-b">
                           <td className="p-2 font-medium bg-gray-100">Passport Number</td>
                           <td className="p-2">
-                            {verificationResult?.result?.result?.dl_number || "N/A"}
+                            {verificationResult?.result?.result?.passport_number || "N/A"}
                           </td>
                         </tr>
                         <tr className="border-b">
-                          <td className="p-2 font-medium bg-gray-100">Issue Date</td>
+                          <td className="p-2 font-medium bg-gray-100">Application Type</td>
                           <td className="p-2">
-                            {verificationResult?.result?.result?.issue_date || "N/A"}
+                            {verificationResult?.result?.result?.application_type || "N/A"}
                           </td>
                         </tr>
                         <tr className="border-b">
-                          <td className="p-2 font-medium bg-gray-100">Expiry Date</td>
+                          <td className="p-2 font-medium bg-gray-100">Application Date</td>
                           <td className="p-2">
-                            {verificationResult?.result?.result?.expiry_date || "N/A"}
+                            {verificationResult?.result?.result?.application_date || "N/A"}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-2 font-medium bg-gray-100">Date OF Dispatch</td>
+                          <td className="p-2">
+                            {verificationResult?.result?.result?.date_of_dispatch || "N/A"}
                           </td>
                         </tr>
                       </tbody>
