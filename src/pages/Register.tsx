@@ -87,7 +87,7 @@ const Register: React.FC = () => {
     } catch (error) {
       toast({
         title: "Registration fail",
-        description: error.details[0].msg,
+        description: error.response.data?.detail || "Register failed pls try again",
         variant: "destructive",
       });
     } finally {

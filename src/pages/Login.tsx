@@ -57,13 +57,13 @@ const Login: React.FC = () => {
       });
       navigate("/dashboard");
     } catch (error) {
-      if (error?.details) {
+      
         toast({
           title: "Login Failed",
-          description: error?.details[0].msg,
+          description: error.response.data?.detail || "Login failed pls try again",
           variant: "destructive",
         });
-      }
+      
     } finally {
       setIsLoading(false);
     }
