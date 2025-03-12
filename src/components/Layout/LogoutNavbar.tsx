@@ -34,13 +34,17 @@ const LogoutNavbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 py-4 bg-background/80 backdrop-blur-md border-b shadow-sm">
-      <div className="container mx-auto px-4 flex items-center justify-end">
+    <header className="sticky top-0 left-0 right-0 z-50 py-4 bg-background/80 backdrop-blur-md border-b shadow-sm w-full">
+      <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="flex items-center gap-1.5 font-semibold text-xl transition-all">
+      <span className="text-primary">KYC</span>
+      <span className="font-light">Fabric</span>
+      </div>
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">
             <Avatar>
               <AvatarImage src="/path-to-user-image.jpg" alt="User" />
-              <AvatarFallback className="bg-gray-500 text-white">U</AvatarFallback>
+              <AvatarFallback className="bg-[#f6b438] text-white">C</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
