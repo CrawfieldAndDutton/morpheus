@@ -25,50 +25,116 @@ import { dashboardApi } from "@/apis/modules/dashboard";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [panCalls,setPanCalls] = useState(0);
-  const [credits,setCredits] = useState(0);
-  const currentDate = new Date().toISOString().split('T')[0];
-  const [dailyCredit,setDailyCredit] = useState(0);
+  //to set total daily api calls
+  const [panCalls, setPanCalls] = useState(0);
+  const [aadhaarCalls, setAaadhaarCalls] = useState(0);
+  const [rcCalls, setRcCalls] = useState(0);
+  const [voterCalls, setVoterCalls] = useState(0);
+  const [dlCalls, setDlCalls] = useState(0);
+  const [passportCalls, setPassortCalls] = useState(0);
+
+  //pending credits of user
+  const [credits, setCredits] = useState(0);
+
+  //getting current date
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  //total credit used daily in pon,rc,dl e.t.c
+  const [dailyCredit, setDailyCredit] = useState(0);
 
   //fetching pending credits
-   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await dashboardApi.getCredits();
-          setCredits(response.data.result.pending_credits);
-        } catch (err) {
-          console.log("error in fetching dashboard")
-        } 
-      };
-      fetchData();  
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await dashboardApi.getCredits();
+        setCredits(response.data.result.pending_credits);
+      } catch (err) {
+        console.log("error in fetching dashboard");
+      }
+    };
+    fetchData();
+  }, []);
 
   //for total credits used
-  useEffect(()=>{
-      const fetchDailyCredit = async () =>{
-        try{
-          const responsePAN = await dashboardApi.getWeeklyCreditUsage(`KYC_PAN`);
-          const responseRC = await dashboardApi.getWeeklyCreditUsage(`KYC_RC`);
-          const responseDL = await dashboardApi.getWeeklyCreditUsage(`KYC_DL`);
-          const responsePASSPORT = await dashboardApi.getWeeklyCreditUsage(`KYC_PASSPORT`);
-          const responseVOTER = await dashboardApi.getWeeklyCreditUsage(`KYC_VOTER`);
-          const responseAADHAAR = await dashboardApi.getWeeklyCreditUsage(`KYC_AADHAAR`);
-          
-          const panCredits :number = responsePAN.data.result.find(item => item.date === currentDate)?.total_amount || 0 
-          const rcCredits :number = responseRC.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-          const dlCredits :number = responseDL.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-          const passportCredits :number = responsePASSPORT.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-          const voterCredits: number = responseVOTER.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-          const aadhaarCredits: number = responseAADHAAR.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-          
-          setDailyCredit(panCredits + rcCredits + dlCredits + passportCredits + voterCredits + aadhaarCredits)
-  
-        }catch(err){
-          console.log("error in fetching dashboard");
-        }
+  useEffect(() => {
+    const fetchDailyCredit = async () => {
+      try {
+        //storing responses for fetching date wise api calls
+        const responsePAN = await dashboardApi.getWeeklyCreditUsage(`KYC_PAN`);
+        const responseRC = await dashboardApi.getWeeklyCreditUsage(`KYC_RC`);
+        const responseDL = await dashboardApi.getWeeklyCreditUsage(`KYC_DL`);
+        const responsePASSPORT = await dashboardApi.getWeeklyCreditUsage(
+          `KYC_PASSPORT`
+        );
+        const responseVOTER = await dashboardApi.getWeeklyCreditUsage(
+          `KYC_VOTER`
+        );
+        const responseAADHAAR = await dashboardApi.getWeeklyCreditUsage(
+          `KYC_AADHAAR`
+        );
+        //storing total amount spend today
+        const panCredits: number =
+          responsePAN.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        const rcCredits: number =
+          responseRC.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        const dlCredits: number =
+          responseDL.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        const passportCredits: number =
+          responsePASSPORT.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        const voterCredits: number =
+          responseVOTER.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        const aadhaarCredits: number =
+          responseAADHAAR.data.result.find((item) => item.date === currentDate)
+            ?.total_amount || 0;
+        //setting daily api calls for pan,dl ....
+        setPanCalls(
+          responsePAN.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+        setRcCalls(
+          responseRC.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+        setDlCalls(
+          responseDL.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+        setPassortCalls(
+          responsePASSPORT.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+        setVoterCalls(
+          responseVOTER.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+        setAaadhaarCalls(
+          responseAADHAAR.data.result.find((item) => item.date === currentDate)
+            ?.count || 0
+        );
+
+        console.log(aadhaarCalls)
+        console.log(panCalls)
+
+        //setting total credits spend today
+        setDailyCredit(
+          panCredits +
+            rcCredits +
+            dlCredits +
+            passportCredits +
+            voterCredits +
+            aadhaarCredits
+        );
+      } catch (err) {
+        console.log("error in fetching dashboard");
       }
-      fetchDailyCredit()
-    },[])
+    };
+    fetchDailyCredit();
+  }, []);
 
   // Simulated data - in a real app, this would come from your API
   const creditBalance = credits;
@@ -122,7 +188,7 @@ const Dashboard: React.FC = () => {
     {
       id: "pan",
       name: "PAN API ",
-      dailyCalls: 10,
+      dailyCalls: panCalls,
       description: "Shows total api calls PAN",
       icon: <FileText className="h-8 w-8 text-kycfabric-gold" />,
       credits: 2,
@@ -131,7 +197,7 @@ const Dashboard: React.FC = () => {
     {
       id: "aadhaar",
       name: "Aadhaar API",
-      dailyCalls: 20,
+      dailyCalls: aadhaarCalls,
       description: "Shows total api calls aadhar",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
       credits: 1,
@@ -140,7 +206,7 @@ const Dashboard: React.FC = () => {
     {
       id: "voter",
       name: "Voter API",
-      dailyCalls: 30,
+      dailyCalls: voterCalls,
       description: "Shows total api calls Voter ",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
       credits: 5,
@@ -149,7 +215,7 @@ const Dashboard: React.FC = () => {
     {
       id: "vehicle",
       name: "Vehicle RC API",
-      dailyCalls: 10,
+      dailyCalls: rcCalls,
       description: "Shows total api calls Vehicle RC",
       icon: <FileText className="h-8 w-8 text-kycfabric-gold" />,
       credits: 7.5,
@@ -158,7 +224,7 @@ const Dashboard: React.FC = () => {
     {
       id: "passport",
       name: "Passport API",
-      dailyCalls: 50,
+      dailyCalls: passportCalls,
       description: "Shows total api calls passport",
       icon: <CreditCard className="h-8 w-8 text-kycfabric-gold" />,
       credits: 5,
@@ -233,73 +299,74 @@ const Dashboard: React.FC = () => {
 
           {/* Credit Balance Card */}
           <div className="flex max-sm:flex-col">
-          <Card className="w-[70%] max-sm:w-[100%]">
-            <div className="flex justify-between max-sm:block">
-              <CardHeader className="pb-3 max-sm:pb-0">
-                <CardTitle className="text-xl">Credit Balance</CardTitle>
+            <Card className="w-[70%] max-sm:w-[100%]">
+              <div className="flex justify-between max-sm:block">
+                <CardHeader className="pb-3 max-sm:pb-0">
+                  <CardTitle className="text-xl">Credit Balance</CardTitle>
 
-                <CardDescription>
-                  Your available verification credits
-                </CardDescription>
-              </CardHeader>
+                  <CardDescription>
+                    Your available verification credits
+                  </CardDescription>
+                </CardHeader>
+              </div>
 
-              
-              
-            </div>
-
-            <CardContent>
-              <div className="flex items-center">
-                
-                <div>
-                  <div className="text-3xl font-bold">{creditBalance}</div>
-                  <div className="text-sm text-muted-foreground">
-                    Available Credits
+              <CardContent>
+                <div className="flex items-center">
+                  <div>
+                    <div className="text-3xl font-bold">{creditBalance}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Available Credits
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-            <CardFooter className="pt-0">
-              <Button
-                onClick={() => navigate("/credit-purchase")}
-                variant="outline"
-                className="w-full sm:w-auto"
+              </CardContent>
+              <CardFooter className="pt-0">
+                <Button
+                  onClick={() => navigate("/credit-purchase")}
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                >
+                  Purchase more credits
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <div className="w-[30%] max-sm:w-[100%] max-sm:flex">
+              <div
+                className="bg-yellow-50 rounded-t-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]"
+                style={{ border: "1px solid hsl(45, 100%, 50%)" }}
               >
-                Purchase more credits
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <div className="w-[30%] max-sm:w-[100%] max-sm:flex">
-                <div className="bg-yellow-50 rounded-t-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]"  style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
-                  <div className=" hover:bg-transparent max-sm:text-sm">Daily Credit Used </div>
-                  <span className="text-xl text-muted-foreground">
-                    {"  "}
-                    {dailyCredit}
-                  </span>
+                <div className=" hover:bg-transparent max-sm:text-sm">
+                  Daily Credit Used{" "}
                 </div>
+                <span className="text-xl text-muted-foreground">
+                  {"  "}
+                  {dailyCredit}
+                </span>
+              </div>
 
-                <div className="bg-yellow-50 rounded-b-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]" style={{border: '1px solid hsl(45, 100%, 50%)'  }}>
-                <div className=" hover:bg-transparent max-sm:text-sm">Monthly Credit Used </div>
-                  <span className="text-xl text-muted-foreground">
-                    {"  "}
-                    5000
-                  </span>
+              <div
+                className="bg-yellow-50 rounded-b-lg justify-center p-0 flex flex-col items-center h-[50%] max-sm:w-[50%] max-sm:h-[100px]"
+                style={{ border: "1px solid hsl(45, 100%, 50%)" }}
+              >
+                <div className=" hover:bg-transparent max-sm:text-sm">
+                  Monthly Credit Used{" "}
                 </div>
-                </div>
-
-
+                <span className="text-xl text-muted-foreground">
+                  {"  "}
+                  5000
+                </span>
+              </div>
+            </div>
           </div>
-
-          
 
           {/*Analytics of api usage*/}
           <div className="display flex gap-4 max-sm:flex-col">
             {/*pie chart ui*/}
-           <PieChartUi/>
+            <PieChartUi />
             {/*Line chart section */}
             <LineChartUi />
           </div>
-
 
           {/*daily credit usage and api usage section */}
           <div>
@@ -308,7 +375,7 @@ const Dashboard: React.FC = () => {
               {dailyVerification.map((method) => (
                 <Card
                   key={method.id}
-                  className="hover:border-primary transition-all min-h-[300px]"
+                  className="hover:border-primary relative transition-all min-h-[280px] overflow-hidden"
                 >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">
@@ -326,36 +393,30 @@ const Dashboard: React.FC = () => {
                       {method.description}{" "}
                     </p>
                   </CardContent>
-                  <div className="bg-yellow-50 grid grid-cols-2 h-[157px] mt-5 " >
-                    <div className="w-full flex flex-col justify-center items-center p-0 hover:bg-transparent " style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
-                    <div className="text-[12px]">Daily Calls </div>
+                  <div className="bg-yellow-50 absolute grid grid-cols-2 bottom-0 h-[80px] mt-5 w-[100%] ">
+                   
+
+                    <div
+                      className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-bl-lg"
+                      style={{ border: "1px solid hsl(45, 100%, 50%)" }}
+                    >
+                      <div className="text-[12px]">Daily Calls </div>
                       <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.dailyCalls}
                       </span>
                     </div>
 
-                    <div className="w-full flex flex-col justify-center items-center  p-0  hover:bg-transparent" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
-                      <div className="text-[12px]">Total Calls </div>
-                      <span className="text-lg text-muted-foreground">
-                        {" "}
-                        {method.totalCalls}
-                      </span>
-                    </div>
-
-                    <div className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-bl-lg" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
-                      <div className="text-[12px]  text-nowrap">Daily Credit Used </div>
+                    <div
+                      className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-br-lg"
+                      style={{ border: "1px solid hsl(45, 100%, 50%)" }}
+                    >
+                      <div className="text-[12px]  text-nowrap">
+                        Daily Credit Used{" "}
+                      </div>
                       <span className="text-lg text-muted-foreground">
                         {" "}
                         {method.dailyCalls * method.credits}
-                      </span>
-                    </div>
-
-                    <div className="w-full flex flex-col justify-center items-center p-0  hover:bg-transparent rounded-br-lg" style={{ border: '1px solid hsl(45, 100%, 50%)'  }}>
-                     <div className="text-[12px] text-nowrap">Total Credit Used </div>
-                      <span className="text-lg text-muted-foreground">
-                        {" "}
-                        {method.totalCalls * method.credits}
                       </span>
                     </div>
                   </div>
@@ -363,7 +424,6 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
           </div>
-
 
           {/* Verification Methods Section */}
           <div>
@@ -374,7 +434,7 @@ const Dashboard: React.FC = () => {
                   key={method.id}
                   className="hover:border-primary transition-all cursor-pointer"
                   onClick={() => {
-                      navigate(`/verification-form/${method.id}`);
+                    navigate(`/verification-form/${method.id}`);
                   }}
                 >
                   <CardHeader className="pb-2">
