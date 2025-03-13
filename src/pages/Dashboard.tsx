@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useActionData } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,7 +25,8 @@ import { dashboardApi } from "@/apis/modules/dashboard";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [credits,setCredits] = useState();
+  const [panCalls,setPanCalls] = useState(0);
+  const [credits,setCredits] = useState(0);
   const currentDate = new Date().toISOString().split('T')[0];
   const [dailyCredit,setDailyCredit] = useState(0);
 
