@@ -1,4 +1,4 @@
-
+import emailjs from "emailjs-com";
 import React, { useState } from "react";
 import Navbar from "@/components/Layout/Navbar";
 import Footer from "@/components/Layout/Footer";
@@ -7,38 +7,57 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 const Contact: React.FC = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     companyName: '',
     email: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    message:''
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const serviceId = import.meta.env.VITE_EMAIL_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
+    console.log(formData)
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      toast.success('Your message has been sent successfully. We will contact you soon.');
-      setFormData({
-        name: '',
-        companyName: '',
-        email: '',
-        phoneNumber: ''
+    emailjs
+      .send(
+        serviceId,
+        templateId,
+        formData,
+        publicKey
+      )
+      .then((response) => {
+        console.log("Email sent successfully!", response);
+        toast({
+          title: "Message Sent",
+          description: "Thanks for contacting us!",
+        });
+        setIsSubmitting(false);
+      })
+      .catch((error) => {
+        toast({
+          title: "Message cannot be send",
+          description: "There is some issues",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
       });
-      setIsSubmitting(false);
-    }, 1500);
   };
   
   return (
@@ -83,7 +102,7 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="mt-12 p-6 bg-card border rounded-lg">
+                <div className="mt-20 p-6 bg-card border rounded-lg h-[208px]">
                   <h3 className="font-medium mb-3">Business Hours</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
@@ -150,6 +169,19 @@ const Contact: React.FC = () => {
                       value={formData.phoneNumber}
                       onChange={handleChange}
                       placeholder="+91 XXXXXXXXXX"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea
+                      
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Write your message here"
                       required
                     />
                   </div>
