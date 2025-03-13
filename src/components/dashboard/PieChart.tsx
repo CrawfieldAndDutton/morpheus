@@ -24,6 +24,7 @@ export function PieChartUi() {
   
   const [panCall , setPanCall] = useState(0);
   const [dlCall , setdlCall] = useState(0);
+  const [aadhaarCall , setAadhaarCall] = useState(0);
   const [passportCall , setPassportCall] = useState(0);
   const [rcCall , setRcCall] = useState(0);
   const [voterCall , setVoterCall] = useState(0);
@@ -39,6 +40,7 @@ export function PieChartUi() {
         const response = await dashboardApi.getTotalCredits();
         setPanCall(response.data.result?.KYC_PAN || null)
         setdlCall(response.data.result?.KYC_DL || null)
+        setAadhaarCall(response.data.result?.KYC_AADHAAR || null)
         setPassportCall(response.data.result?.KYC_PASSPORT || null)
         setVoterCall(response.data.result?.KYC_VOTER || null)
         setRcCall(response.data.result?.KYC_RC || null)
@@ -55,6 +57,7 @@ export function PieChartUi() {
   const dashboardData = [
     { type: "PAN", calls: panCall },
     { type: "VOTER", calls:  voterCall },
+    { type: "AADHAAR", calls: aadhaarCall },
     { type: "RC", calls: rcCall },
     { type: "PASSPORT", calls: passportCall },
     { type: "DRIVING LICENSE", calls: dlCall }
@@ -71,7 +74,8 @@ export function PieChartUi() {
     "hsl(44, 90%, 63%)" ,
     "hsl(44, 90%, 70%)" ,
     "hsl(44, 90%, 82%)",
-    
+    "hsl(44, 90%, 90%)"
+
   ]
 
   //mapping the colors with the coming values
