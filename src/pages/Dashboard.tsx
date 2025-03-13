@@ -51,14 +51,16 @@ const Dashboard: React.FC = () => {
           const responseDL = await dashboardApi.getWeeklyCreditUsage(`KYC_DL`);
           const responsePASSPORT = await dashboardApi.getWeeklyCreditUsage(`KYC_PASSPORT`);
           const responseVOTER = await dashboardApi.getWeeklyCreditUsage(`KYC_VOTER`);
+          const responseAADHAAR = await dashboardApi.getWeeklyCreditUsage(`KYC_AADHAAR`);
           
           const panCredits :number = responsePAN.data.result.find(item => item.date === currentDate)?.total_amount || 0 
           const rcCredits :number = responseRC.data.result.find(item => item.date === currentDate)?.total_amount  || 0
           const dlCredits :number = responseDL.data.result.find(item => item.date === currentDate)?.total_amount  || 0
           const passportCredits :number = responsePASSPORT.data.result.find(item => item.date === currentDate)?.total_amount  || 0
           const voterCredits: number = responseVOTER.data.result.find(item => item.date === currentDate)?.total_amount  || 0
-  
-          setDailyCredit(panCredits + rcCredits + dlCredits + passportCredits + voterCredits)
+          const aadhaarCredits: number = responseAADHAAR.data.result.find(item => item.date === currentDate)?.total_amount  || 0
+          
+          setDailyCredit(panCredits + rcCredits + dlCredits + passportCredits + voterCredits + aadhaarCredits)
   
         }catch(err){
           console.log("error in fetching dashboard");

@@ -55,7 +55,7 @@ export function LineChartUi(): JSX.Element {
   
 
   //options for 7 days credit (later update needed use maps )
-  const options = ["PAN", "RC" ,"DL","PASSPORT","VOTER"];
+  const options = ["PAN", "RC" ,"AADHAAR","DL","PASSPORT","VOTER"];
 
   useEffect(() => {
     const fetchData = async () => {
