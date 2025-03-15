@@ -16,7 +16,7 @@ import VerificationForm from "./pages/VerificationForm";
 import VerificationHistory from "./pages/VerificationHistory";
 import CreditPurchase from "./pages/CreditPurchase";
 import NotFound from "./pages/NotFound";
-import AadhaarVerification from "./pages/AadhaarVerification";
+
 import { Toaster } from "./components/ui/toaster";
 import PrivateRoute from "./routes/PrivateRoute";
 import { RootState } from "./types/store.types";
@@ -52,16 +52,7 @@ function App() {
             />
           }
         />
-        <Route path="/application-progress" element={<ApplicationProgress />} />
-        <Route
-          path="/aadhaar-verification"
-          element={
-            <PrivateRoute
-              isAuthenticated={isAuthenticated}
-              element={AadhaarVerification}
-            />
-          }
-        />
+       
         <Route
           path="/verification-form/:type"
           element={
